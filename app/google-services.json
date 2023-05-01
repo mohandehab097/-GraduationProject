@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "903926665391",
+    "project_id": "raknii-graduation-project",
+    "storage_bucket": "raknii-graduation-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903926665391:android:68c30996d6f99bef50045a",
+        "android_client_info": {
+          "package_name": "com.example.smartparking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903926665391-v632g9f4j69k5onrrc4i1i7kqklj9le5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlybb59Mdha9zxSDAj176XuuZ6LA6Hj5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903926665391-v632g9f4j69k5onrrc4i1i7kqklj9le5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".ReservationActivity">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#ffffff"
+      android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="263dp"
+        android:background="@drawable/backg">
+
+      <ImageView
+          android:layout_width="77dp"
+          android:layout_height="77dp"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="93dp"
+          android:src="@drawable/car" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed-light"
+            android:letterSpacing="0.5"
+            android:layout_marginTop="170dp"
+
+            android:text="RAKNII"
+            android:textSize="25dp" />
+
+    </FrameLayout>
+
+
+
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="32dp"
+        android:background="@drawable/blue_border_rounded_cornwe">
+
+
+    <EditText
+          android:id="@+id/date"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+
+          android:layout_toRightOf="@+id/date_icon"
+          android:background="@android:color/transparent"
+          android:fontFamily="@font/poppins_regular"
+          android:hint="Enter Booking Date"
+          android:paddingStart="15dp"
+          android:inputType="datetime"
+          android:clickable="false"
+          android:cursorVisible="false"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:maxLines="1"
+          android:paddingLeft="17dp"
+          android:paddingTop="15dp"
+          android:paddingBottom="15dp"
+          android:textCursorDrawable="@drawable/cursor_color"
+          android:textSize="12sp" />
+
+
+
+
+      <ImageView
+          android:id="@+id/date_icon"
+          android:layout_width="14.7dp"
+          android:layout_height="10.3dp"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="17dp"
+          android:src="@drawable/digitalclock" />
+
+
+
+
+    </RelativeLayout>
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="50dp"
+          >
+
+
+          <ImageView
+              android:id="@+id/error_date_icon_credentials"
+              android:layout_width="16.7dp"
+              android:layout_height="13.3dp"
+              android:layout_centerVertical="true"
+              android:visibility="gone"
+              android:layout_marginTop="3dp"
+
+              android:src="@drawable/error"/>
+
+          <TextView
+              android:id="@+id/dateCredentials"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text=""
+              android:textColor="@color/red"
+              android:visibility="gone"
+              android:textSize="13dp"
+              android:textStyle="bold" />
+
+      </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="12.7dp"
+        android:background="@drawable/blue_border_rounded_cornwe">
+
+
+      <EditText
+          android:id="@+id/time"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@+id/time_icon"
+          android:background="@android:color/transparent"
+          android:fontFamily="@font/poppins_regular"
+          android:hint="Enter Expected Booking Time"
+          android:paddingStart="15dp"
+          android:inputType="time"
+          android:clickable="false"
+          android:cursorVisible="false"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:maxLines="1"
+          android:paddingLeft="17dp"
+          android:paddingTop="15dp"
+          android:paddingBottom="15dp"
+          android:textCursorDrawable="@drawable/cursor_color"
+          android:textSize="12sp" />
+
+
+
+
+
+
+      <ImageView
+          android:id="@+id/time_icon"
+          android:layout_width="14.7dp"
+          android:layout_height="10.3dp"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="17dp"
+          android:src="@drawable/digitalclock" />
+
+
+
+    </RelativeLayout>
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="50dp"
+          >
+
+
+          <ImageView
+              android:id="@+id/error_time_icon_credentials"
+              android:layout_width="16.7dp"
+              android:layout_height="13.3dp"
+              android:layout_centerVertical="true"
+              android:visibility="gone"
+              android:layout_marginTop="3dp"
+
+              android:src="@drawable/error"/>
+
+          <TextView
+              android:id="@+id/timeCredentials"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text=""
+              android:textColor="@color/red"
+              android:visibility="gone"
+              android:textSize="13dp"
+              android:textStyle="bold" />
+
+      </LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+  android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12.7dp"
+        android:layout_marginLeft="32dp"
+        android:background="@drawable/blue_border_rounded_cornwe">
+
+        <EditText
+            android:id="@+id/LicenseNumber_input2"
+            android:layout_width="110dp"
+            android:maxLength="4"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:inputType="number"
+            android:hint="9123"
+            android:textAlignment="center"
+            android:maxLines="1"
+
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textStyle="bold"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="15sp" />
+
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        >
+
+
+        <ImageView
+            android:id="@+id/error_license_icon_credentials"
+            android:layout_width="16.7dp"
+            android:layout_height="13.3dp"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:layout_marginTop="3dp"
+
+            android:src="@drawable/error"/>
+
+        <TextView
+            android:id="@+id/licenseCredentials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/red"
+            android:visibility="gone"
+            android:textSize="13dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+    <RelativeLayout
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12.7dp"
+        android:background="@drawable/blue_border_rounded_cornwe">
+
+        <EditText
+            android:id="@+id/LicenseCharacter"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZاأبتثجحخدذرزسشصضطظعغفقكلمنهوي"
+            android:fontFamily="@font/poppins_regular"
+
+            android:hint="س أ ب"
+
+            android:inputType="text"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textAlignment="center"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp">
+
+
+      <ImageView
+          android:id="@+id/error_icon_car_number"
+          android:layout_width="16.7dp"
+          android:layout_height="13.3dp"
+          android:layout_centerVertical="true"
+          android:layout_marginTop="3dp"
+          android:src="@drawable/error"
+          android:visibility="gone" />
+
+      <TextView
+          android:id="@+id/carNumberValidation"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="You Should Enter Your Car Number"
+          android:textColor="@color/red"
+          android:textSize="13dp"
+          android:textStyle="bold"
+          android:visibility="gone" />
+
+    </LinearLayout>
+
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="4dp"
+          android:layout_marginLeft="50dp">
+
+
+          <ImageView
+              android:id="@+id/error_icon_car_character"
+              android:layout_width="16.7dp"
+              android:layout_height="13.3dp"
+              android:layout_centerVertical="true"
+              android:layout_marginTop="3dp"
+              android:src="@drawable/error"
+              android:visibility="gone" />
+
+          <TextView
+              android:id="@+id/carCharacterValidation"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="You Should Enter Your Car Number"
+              android:textColor="@color/red"
+              android:textSize="13dp"
+              android:textStyle="bold"
+              android:visibility="gone" />
+
+      </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/bookingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="18.7dp"
+        android:layout_marginRight="62dp"
+        android:background="@drawable/blue_fill__rounded_color"
+        android:fontFamily="@font/poppins_medium"
+        android:gravity="center"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="Book your parking slot"
+        android:textColor="#000000" />
+
+
+
+  </LinearLayout>
+
+</RelativeLayout>
+
+    <!--        <Button-->
+    <!--        android:id="@+id/logoutBtn"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="50dp"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:text="Logout"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/userId22"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
