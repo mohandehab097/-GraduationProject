@@ -1,14 +1,17 @@
 package com.example.smartparking;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.smartparking.models.ParkingSlotBooking;
 import com.example.smartparking.models.Payment;
 import com.example.smartparking.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -16,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
+import com.google.firebase.ml.naturallanguage.languageid.FirebaseLanguageIdentification;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -58,8 +63,13 @@ public class PaymentActivity extends AppCompatActivity {
 
                     if (slotBooking != null) {
                         if (slotBooking.getLicenseNumbersAndCharacter() != null) {
-                            userLicenseNumber=slotBooking.getLiceseCharacter() + " " + slotBooking.getLicenseNumber();
-                            fun(userLicenseNumber);
+                            StringBuilder reverseLicenseNumber = new StringBuilder();
+                            reverseLicenseNumber.append(slotBooking.getLicenseNumber());
+
+                            // reverse StringBuilder input1
+                            reverseLicenseNumber.reverse();
+                            userLicenseNumber=slotBooking.getLiceseCharacter() + " " + reverseLicenseNumber;
+                            fun();
                         }
                     }
 
@@ -80,25 +90,43 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
 
-    private void fun(String userLicenseNumberr){
+    private void fun(){
 
-        paymentRef.child(userLicenseNumberr).addValueEventListener(new ValueEventListener() {
+        FirebaseLanguageIdentification languageIdentifier =
+                FirebaseNaturalLanguage.getInstance().getLanguageIdentification();
+        languageIdentifier.identifyLanguage(userLicenseNumber).addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                    Payment userPayment = snapshot.getValue(Payment.class);
-                    stayedHourMinutes.setText(userPayment.getUserStayedHour()+"h"+userPayment.getUserStayedMinutes()+"m");
-                    amount.setText(userPayment.getUserAmountToPay() + "$");
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onSuccess(@Nullable String languageCode) {
+                if (languageCode != "und") {
+                    Log.i("TAG", "Language: " + languageCode);
+                } else {
+                    Log.i("TAG", "Can't identify language.");
+                }
             }
         });
+//
+//        paymentRef.child(userLicenseNumber).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//
+//                for (DataSnapshot snapshot2 :  snapshot.getChildren() ){
+//                    Payment userPayment = snapshot2.getValue(Payment.class);
+////                    stayedHourMinutes.setText(userPayment.getUserStayedHour()+"h"+userPayment.getUserStayedMinutes()+"m");
+//                    if(userPayment!=null){
+//                        amount.setText(userPayment.getLicenseNumber()+ "$");
+//                    }
+//
+//
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
     }
 }

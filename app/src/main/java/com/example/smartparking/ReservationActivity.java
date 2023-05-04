@@ -280,14 +280,14 @@ public class ReservationActivity extends AppCompatActivity {
 
 
                 String licenseCharacterWithSpaces= licenseCharacters.replace("", " ").trim();
-                String licenseNumbersAndCharacter = licenseNumber+" "+licenseCharacterWithSpaces;
+                String licenseNumbersWithSpaces= licenseNumber.replace("", " ").trim();
+                String licenseNumbersAndCharacter = licenseNumbersWithSpaces+" "+licenseCharacterWithSpaces;
 
 
                 validate = validateData();
                 if (validate) {
                     slotBooking.setUserId(authUser.getUid());
-                    slotBooking.setLicenseNumber("س أ ب 91456");
-                    slotBooking.setLicenseNumber(licenseNumber);
+                    slotBooking.setLicenseNumber(licenseNumbersWithSpaces);
                     slotBooking.setLiceseCharacter(licenseCharacterWithSpaces);
                     slotBooking.setLicenseNumbersAndCharacter(licenseNumbersAndCharacter);
                     showConfirmBookingDialog(slotBooking);

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Animation translatebu = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_in_left_2);
         icon.startAnimation(translatebu);
         title.setAnimation(bottomAnim);
-//        secondTitle.setAnimation(bottomAnim);
+
     }
 
     public void goToSecondPage() {
@@ -78,73 +78,26 @@ public class MainActivity extends AppCompatActivity {
                 DatabaseReference userBooking = null;
 
 
-                if(slotReff!=null) {
-                    if(uid!=null){
-                        slotReff.child(uid).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ParkingSlotBooking slotBooking = snapshot.getValue(ParkingSlotBooking.class);
+                if(slotReff!=null&&uid!=null) {
+                    checkGoToCounterPage();
 
-                                if (slotBooking != null) {
-                                    if (slotBooking.getUserName() != null) {
-                                        bookingUserName = slotBooking.getUserName();
-                                        goToCounterPage();
-                                    }
-                                }
-
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                }
+                else{
+                    if (uidRef != null&&bookingUserName==null) {
+                        goToHomePage();
                     }
 
+                    else {
+                        goToSecondActivityPage();
+                    }
                 }
 
 
-                    if (authUser != null&&bookingUserName==null) {
-                        if (uidRef != null) {
-                            uidRef.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    User userProfile = snapshot.getValue(User.class);
-                                    if (userProfile != null) {
 
 
-                                        checkEmail = userProfile.getEmail();
-
-                                        if (checkEmail.equals("admin@gmail.com")) {
-                                            goToAdminHomePage();
-                                        } else {
-                                            goToHomePage();
-                                        }
 
 
-                                    }
-                                    else{
-                                        goToSecondActivityPage();
 
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-                        }
-                        else{
-                            goToSecondActivityPage();
-
-                        }
-
-                    } else {
-                        goToSecondActivityPage();
-                    }
 
 
             }
@@ -173,5 +126,28 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SecondActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void checkGoToCounterPage(){
+        slotReff.child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ParkingSlotBooking slotBooking = snapshot.getValue(ParkingSlotBooking.class);
+
+                if (slotBooking != null) {
+                    if (slotBooking.getUserName() != null) {
+                        bookingUserName = slotBooking.getUserName();
+                        goToCounterPage();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
