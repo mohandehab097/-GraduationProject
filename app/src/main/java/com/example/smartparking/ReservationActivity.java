@@ -148,6 +148,7 @@ public class ReservationActivity extends AppCompatActivity {
                     errorTimeMessage.setVisibility(View.GONE);
                     errorTimeIcon.setVisibility(View.GONE);
                     slotBooking.setTime(time);
+
                 }
 
             }
@@ -308,6 +309,7 @@ public class ReservationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         bookingTime.setText(selectedHour + ":" + selectedMinute);
+                        slotBooking.setLimittime(selectedHour+2+":"+selectedMinute);
                     }
                 }, hour, minute, true);
                 mTimePicker.show();

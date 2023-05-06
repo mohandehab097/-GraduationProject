@@ -7,6 +7,9 @@
     android:background="#ffffff"
     tools:context=".PaymentActivity">
 
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,70 +45,110 @@
 
 
 
-        <RelativeLayout
-            android:layout_width="400dp"
-            android:layout_height="100dp"
-            >
+    <LinearLayout
+        android:layout_marginTop="100dp"
+        android:layout_width="300dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="@drawable/customborder"
 
+        android:layout_height="300dp">
+
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="Your Booking Payment"
+            android:layout_marginBottom="4dp"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="#FFC107"/>
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:padding="5dp"
+            android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/dateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="You stayed in your parking slot :"
-                android:textSize="20dp"
-                android:layout_marginTop="50dp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:layout_marginLeft="20dp"
-                />
-
-
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
             <TextView
                 android:id="@+id/hourMinutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2h 30m"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:layout_marginLeft="320dp"
-                android:layout_marginTop="50dp"
+                android:text=""
+                android:layout_marginLeft="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
                 android:textStyle="bold"/>
 
 
+        </LinearLayout>
 
-        </RelativeLayout>
-
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="250dp"
-            android:layout_height="100dp"
-            >
-
+            android:padding="5dp"
+            android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/timeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="You must pay :"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:layout_marginLeft="20dp"
-                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginLeft="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
 
-              />
-
-
-        <TextView
-            android:id="@+id/amount"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:layout_marginLeft="170dp"
-            android:textStyle="bold"/>
-
-        </RelativeLayout>
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal" >
 
 
+            <Button
+                android:id="@+id/cash"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:background="@drawable/blue_fill__rounded_color"
+                android:clickable="true"
+                android:text="Cash"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/blue_fill__rounded_color"
+                android:clickable="true"
+                android:text="Visa"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     </LinearLayout>
 

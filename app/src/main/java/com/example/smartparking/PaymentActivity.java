@@ -3,13 +3,22 @@ package com.example.smartparking;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.example.smartparking.models.ParkingSlotBooking;
 import com.example.smartparking.models.Payment;
+import com.example.smartparking.models.PaymentNotification;
 import com.example.smartparking.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
 import com.google.firebase.ml.naturallanguage.languageid.FirebaseLanguageIdentification;
@@ -26,6 +36,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     DatabaseReference rootRef;
     DatabaseReference paymentRef;
+    DatabaseReference notifyRef;
     DatabaseReference userPaymentRef;
     DatabaseReference slotReff ;
     DatabaseReference slotUserRef ;
@@ -36,6 +47,7 @@ public class PaymentActivity extends AppCompatActivity {
     String userLicenseNumber=null;
     FirebaseAuth auth;
     FirebaseUser authUser;
+    String sendNotification=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +57,10 @@ public class PaymentActivity extends AppCompatActivity {
         authUser = auth.getCurrentUser();
         rootRef = FirebaseDatabase.getInstance().getReference();
         paymentRef=rootRef.child("Payment");
+        notifyRef=rootRef.child("PaymentNotification");
         slotReff=rootRef.child("UsersSlotBooking");
-
+        stayedHourMinutes=findViewById(R.id.hourMinutes);
+        amount=findViewById(R.id.amount);
 
         if (authUser != null) {
             uid = authUser.getUid();
@@ -63,13 +77,22 @@ public class PaymentActivity extends AppCompatActivity {
 
                     if (slotBooking != null) {
                         if (slotBooking.getLicenseNumbersAndCharacter() != null) {
-                            StringBuilder reverseLicenseNumber = new StringBuilder();
-                            reverseLicenseNumber.append(slotBooking.getLicenseNumber());
 
-                            // reverse StringBuilder input1
-                            reverseLicenseNumber.reverse();
-                            userLicenseNumber=slotBooking.getLiceseCharacter() + " " + reverseLicenseNumber;
-                            fun();
+
+                            userLicenseNumber=slotBooking.getLicenseNumber()+" "+slotBooking.getLiceseCharacter();
+
+                            checkPayment();
+
+//                            if(slotBooking.getSendNotification().equals("ON")){
+//
+//
+//
+//
+//
+//                            }
+//                            checkNotification();
+
+
                         }
                     }
 
@@ -90,43 +113,45 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
 
-    private void fun(){
+    private void checkPayment(){
 
-        FirebaseLanguageIdentification languageIdentifier =
-                FirebaseNaturalLanguage.getInstance().getLanguageIdentification();
-        languageIdentifier.identifyLanguage(userLicenseNumber).addOnSuccessListener(new OnSuccessListener<String>() {
+
+
+        paymentRef.child(userLicenseNumber).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(@Nullable String languageCode) {
-                if (languageCode != "und") {
-                    Log.i("TAG", "Language: " + languageCode);
-                } else {
-                    Log.i("TAG", "Can't identify language.");
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+
+                    Payment userPayment = snapshot.getValue(Payment.class);
+                    if(userPayment!=null){
+                        stayedHourMinutes.setText(userPayment.getStayedHourTime()+"h"+" "+userPayment.getStayedMinutesTime()+"m");
+                        amount.setText(userPayment.getTheAmount()+ "$");
+                    }
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-//
-//        paymentRef.child(userLicenseNumber).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//
-//                for (DataSnapshot snapshot2 :  snapshot.getChildren() ){
-//                    Payment userPayment = snapshot2.getValue(Payment.class);
-////                    stayedHourMinutes.setText(userPayment.getUserStayedHour()+"h"+userPayment.getUserStayedMinutes()+"m");
-//                    if(userPayment!=null){
-//                        amount.setText(userPayment.getLicenseNumber()+ "$");
-//                    }
-//
-//
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
     }
+
+
+    @Override
+    public void onBackPressed() {
+
+        Intent new_intent = new Intent(this, HomeActivity.class);
+
+        this.startActivity(new_intent);
+
+    }
+
+
+
 }

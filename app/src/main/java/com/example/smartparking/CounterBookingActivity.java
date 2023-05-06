@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,6 +93,8 @@ public class CounterBookingActivity extends AppCompatActivity {
                     if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
                         NotificationChannel notificationChannel=new NotificationChannel("my_notify","my_notify",NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager=getSystemService(NotificationManager.class);
+                        notificationChannel.setShowBadge(true);
+                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
                         notificationManager.createNotificationChannel(notificationChannel);
                     }
 
@@ -137,13 +140,13 @@ public class CounterBookingActivity extends AppCompatActivity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_notify");
         builder.setContentTitle("RAKNII");
         builder.setContentText("Your Time for Your parking Slot Is Very Close");
-
+        final long[] DEFAULT_VIBRATE_PATTERN = {0, 250, 250, 250};
         builder.setSmallIcon(R.mipmap.icon);
         builder.setAutoCancel(true);
         builder.setOnlyAlertOnce(true);
-        builder.setVibrate(new long[]{1000, 1000, 1000,
-                1000, 1000});
-
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setVibrate(DEFAULT_VIBRATE_PATTERN);
+        builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         Intent intent=new Intent(this,CounterBookingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -154,11 +157,7 @@ public class CounterBookingActivity extends AppCompatActivity {
         notificationManagerCompat.notify(1,builder.build());
 
     }
-    @SuppressLint("RemoteViewLayout")
-    public RemoteViews getRemoteView(String title, String message){
-        RemoteViews remoteViews= new RemoteViews("com.example.smartparking",R.layout.activity_counter_booking);
-        return remoteViews;
-    }
+
 
 
 }

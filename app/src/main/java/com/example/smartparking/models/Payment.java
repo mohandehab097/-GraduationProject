@@ -3,9 +3,9 @@ package com.example.smartparking.models;
 public class Payment {
 
     private String licenseNumber;
-    private Integer userStayedHour;
-    private Integer userStayedMinutes;
-    private Integer userAmountToPay;
+    private Integer stayedHourTime;
+    private Integer stayedMinutesTime;
+    private Integer theAmount;
 
 
     public Payment(){
@@ -21,27 +21,27 @@ public class Payment {
         this.licenseNumber = licenseNumber;
     }
 
-    public Integer getUserStayedHour() {
-        return userStayedHour;
+    public Integer getStayedHourTime() {
+        return stayedHourTime;
     }
 
-    public void setUserStayedHour(Integer userStayedHour) {
-        this.userStayedHour = userStayedHour;
+    public void setStayedHourTime(Integer stayedHourTime) {
+        this.stayedHourTime = stayedHourTime;
     }
 
-    public Integer getUserStayedMinutes() {
-        return userStayedMinutes;
+    public Integer getStayedMinutesTime() {
+        return stayedMinutesTime;
     }
 
-    public void setUserStayedMinutes(Integer userStayedMinutes) {
-        this.userStayedMinutes = userStayedMinutes;
+    public void setStayedMinutesTime(Integer stayedMinutesTime) {
+        this.stayedMinutesTime = stayedMinutesTime;
     }
 
-    public Integer getUserAmountToPay() {
-        return userAmountToPay;
+    public Integer getTheAmount() {
+        return theAmount;
     }
 
-    public void setUserAmountToPay(Integer userAmountToPay) {
-        this.userAmountToPay = userAmountToPay;
+    public void setTheAmount(Integer theAmount) {
+        this.theAmount = theAmount;
     }
 }

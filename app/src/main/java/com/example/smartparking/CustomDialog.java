@@ -41,6 +41,7 @@ public class CustomDialog extends Dialog implements
     public CustomDialog(Activity a, FirebaseUser authUser, ParkingSlotBooking slotBooking, String userBookingDate, String userBookingTime, String userCarNumber, String userCarCharacter) {
         super(a);
         // TODO Auto-generated constructor stub
+        slotBooking.setSendNotification("OFF");
         this.c = a;
         this.authUser = authUser;
         this.slotBooking = slotBooking;
@@ -48,7 +49,6 @@ public class CustomDialog extends Dialog implements
         this.userBookingTime = userBookingTime;
         this.userCarNumber = userCarNumber;
         this.userCarCharacter = userCarCharacter;
-
     }
 
     @Override

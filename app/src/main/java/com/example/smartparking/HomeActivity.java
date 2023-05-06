@@ -136,8 +136,8 @@ public class HomeActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                auth.signOut();
-                startActivity(new Intent(HomeActivity.this,PaymentActivity.class));
+                auth.signOut();
+                startActivity(new Intent(HomeActivity.this,SecondActivity.class));
                 overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
 
             }
