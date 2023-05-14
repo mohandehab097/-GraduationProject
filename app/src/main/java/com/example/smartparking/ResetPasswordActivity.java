@@ -86,7 +86,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                             if(!task.isSuccessful()){
 
                                 emailValidation.setVisibility(View.VISIBLE);
-                                successMessage.setText("Something Went Wrong");
+                                successMessage.setText("The Entered Email Not Found!");
                                 errorIconEmail.setVisibility(View.VISIBLE);
 
                                 emailValidation.startAnimation(translatebu);

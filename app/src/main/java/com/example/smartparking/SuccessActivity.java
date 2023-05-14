@@ -16,7 +16,7 @@ public class SuccessActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent start = new Intent(SuccessActivity.this, CounterBookingActivity.class);
+                Intent start = new Intent(SuccessActivity.this, HomeActivity.class);
                 startActivity(start);
                 overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
 

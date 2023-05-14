@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,13 +51,21 @@ public class CounterBookingActivity extends AppCompatActivity {
     String userBookingDate = null;
     String userBookingTime = null;
     long countDownToNewYear;
+    TextView backToHomeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_counter_booking);
         CountdownView mCvCountdownView = findViewById(R.id.mycountdown);
+        backToHomeBtn=findViewById(R.id.backToHome);
 
+        backToHomeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToHomePage();
+            }
+        });
 
         if (authUser != null) {
             uid = authUser.getUid();
@@ -99,7 +108,7 @@ public class CounterBookingActivity extends AppCompatActivity {
                     }
 
                     if (countDownToNewYear <= 200000 && countDownToNewYear>0) {
-                        addNotification();
+//                        addNotification();
                     }
 
                 } catch (ParseException e) {
@@ -127,36 +136,6 @@ public class CounterBookingActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-//
-//    private void startAlarm(Calendar c,AlarmManager alarmManager,PendingIntent pendingIntent) {
-//
-//        Objects.requireNonNull(alarmManager).setExact(AlarmManager.RTC_WAKEUP,
-//                c.getTimeInMillis(), pendingIntent);
-//    }
-
-    private void addNotification() {
-
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_notify");
-        builder.setContentTitle("RAKNII");
-        builder.setContentText("Your Time for Your parking Slot Is Very Close");
-        final long[] DEFAULT_VIBRATE_PATTERN = {0, 250, 250, 250};
-        builder.setSmallIcon(R.mipmap.icon);
-        builder.setAutoCancel(true);
-        builder.setOnlyAlertOnce(true);
-        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        builder.setVibrate(DEFAULT_VIBRATE_PATTERN);
-        builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
-        Intent intent=new Intent(this,CounterBookingActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
-
-        builder.setContentIntent(pendingIntent);
-        NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(CounterBookingActivity.this);
-        notificationManagerCompat.notify(1,builder.build());
-
-    }
 
 
 

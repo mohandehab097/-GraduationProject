@@ -335,7 +335,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 }
 
 
-//                            updateUI(null);
+
                             }
                         }
                     });

@@ -41,6 +41,8 @@ public class CustomDialog extends Dialog implements
     public CustomDialog(Activity a, FirebaseUser authUser, ParkingSlotBooking slotBooking, String userBookingDate, String userBookingTime, String userCarNumber, String userCarCharacter) {
         super(a);
         // TODO Auto-generated constructor stub
+
+        slotBooking.setArrived(false);
         slotBooking.setSendNotification("OFF");
         this.c = a;
         this.authUser = authUser;
@@ -91,8 +93,6 @@ public class CustomDialog extends Dialog implements
 
 
 
-
-
                 FirebaseDatabase.getInstance().getReference("reservationLicense").child(incrementer.getIncrementValue().toString()).setValue(slotBooking.getLicenseNumbersAndCharacter()).addOnCompleteListener(new OnCompleteListener<Void>() {
 
 
@@ -100,9 +100,7 @@ public class CustomDialog extends Dialog implements
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
 
-                            Intent intent = new Intent(c, SuccessActivity.class);
-                            c.startActivity(intent);
-                            c.finish();
+
 
                         } else {
                             Toast.makeText(c, "User Registered Failed", Toast.LENGTH_LONG).show();
@@ -110,6 +108,8 @@ public class CustomDialog extends Dialog implements
                         }
                     }
                 });
+
+
 
 
                 FirebaseDatabase.getInstance().getReference("UsersSlotBooking").child(authUser.getUid()).setValue(slotBooking).addOnCompleteListener(new OnCompleteListener<Void>() {

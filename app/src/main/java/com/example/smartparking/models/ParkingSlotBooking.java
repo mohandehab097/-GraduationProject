@@ -15,6 +15,7 @@ public class ParkingSlotBooking {
     private String licenseNumbersAndCharacter;
     private String sendNotification;
     private String Limittime;
+    private boolean isArrived;
 
 
 
@@ -101,5 +102,13 @@ public class ParkingSlotBooking {
 
     public void setLimittime(String limittime) {
         Limittime = limittime;
+    }
+
+    public boolean isArrived() {
+        return isArrived;
+    }
+
+    public void setArrived(boolean arrived) {
+        isArrived = arrived;
     }
 }

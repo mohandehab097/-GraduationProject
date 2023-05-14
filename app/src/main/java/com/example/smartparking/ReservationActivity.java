@@ -34,8 +34,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,7 +57,7 @@ public class ReservationActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser authUser;
     ParkingSlotBooking slotBooking;
-
+    List<String> fullParking;
     boolean validate;
 
     @Override
@@ -80,6 +82,7 @@ public class ReservationActivity extends AppCompatActivity {
         validate = true;
         slotBooking = new ParkingSlotBooking();
 
+
         List<String> slotsAvailability = new ArrayList<>();
 
 
@@ -92,7 +95,7 @@ public class ReservationActivity extends AppCompatActivity {
 
                     slotsAvailability.add(ds.getValue().toString());
                 }
-                List<String> fullParking = new ArrayList<>();
+             fullParking = new ArrayList<>();
 
 
                 boolean validBooking = false;
@@ -107,16 +110,9 @@ public class ReservationActivity extends AppCompatActivity {
 
                 slotsAvailability.clear();
 
-                if (fullParking.size() == 0) {
-                    Intent intent = new Intent(ReservationActivity.this, HomeActivity.class);
-                    intent.putExtra("noSlots", "ShowErrorDialog");
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
-                    fullParking.clear();
-                    slotsAvailability.clear();
 
-                }
-                fullParking.clear();
+
+
 
 
             }
@@ -248,7 +244,20 @@ public class ReservationActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Date date = Calendar.getInstance().getTime();
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String today = dateFormat.format(date);
+                if (fullParking.size() == 0&&bookingDate.getText().toString().equals(today)) {
+                    Intent intent = new Intent(ReservationActivity.this, HomeActivity.class);
+                    intent.putExtra("noSlots", "ShowErrorDialog");
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
+                    fullParking.clear();
+                    slotsAvailability.clear();
 
+
+
+                }
             }
         });
 

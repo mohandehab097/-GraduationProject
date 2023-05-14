@@ -25,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     TextView username,email,userId,phoneNumber;
-    TextView logout,reservationBtn;
+    TextView logout,reservationBtn,profileBtn;
     String userEmail="";
     String userUid="";
     String userName="";
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         logout=findViewById(R.id.logoutBtn);
-
+        profileBtn=findViewById(R.id.goToProfile);
         List<String> slotsAvailability=new ArrayList<>();
 
 
@@ -93,35 +93,20 @@ public class HomeActivity extends AppCompatActivity {
 //        });
 
         logout();
+        goToProfileActivity();
 
 
         reservationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int emptySlotsCount=0;
-                boolean validBooking=false;
 
-                for (String slots:slotsAvailability){
 
-                    if(slots.equals("on")){
-                        emptySlotsCount++;
-                        validBooking=true;
-                    }
-                }
 
-                if(validBooking) {
                     startActivity(new Intent(HomeActivity.this, ReservationActivity.class));
                     overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
                     slotsAvailability.clear();
-                }
 
-                else{
 
-                    ErrorDialog cdd=new ErrorDialog(HomeActivity.this);
-                    cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    cdd.getWindow().getAttributes().windowAnimations=R.style.CustomDialogAnimation;
-                    cdd.show();
-                }
 
             }
         });
@@ -143,6 +128,18 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+    private void goToProfileActivity(){
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,UserProfileActivity.class));
+                overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
+
+            }
+        });
+    }
+
+
 
 //    private void goToReservation(){
 //
