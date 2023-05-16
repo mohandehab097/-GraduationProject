@@ -16,27 +16,28 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="263dp"
+            android:layout_height="223dp"
             android:background="@drawable/backg">
 
             <ImageView
                 android:layout_width="77dp"
                 android:layout_height="77dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="93dp"
+                android:layout_marginTop="73dp"
                 android:src="@drawable/car" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:layout_marginLeft="110dp"
-                android:textStyle="bold"
+                android:layout_marginTop="150dp"
                 android:fontFamily="sans-serif-condensed-light"
                 android:letterSpacing="0.5"
-                android:layout_marginTop="170dp"
                 android:text="RAKNII"
-                android:textSize="25dp" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
         </FrameLayout>
 
@@ -68,6 +69,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
 
 
         <RelativeLayout
@@ -370,7 +372,6 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
-            android:layout_marginTop="12.7dp"
             android:layout_marginRight="62dp"
             android:background="@drawable/blue_border_rounded_cornwe"
             >
@@ -430,34 +431,53 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
-        
 
-        <TextView
-            android:id="@+id/signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="52dp"
-            android:layout_marginTop="18.7dp"
-            android:layout_marginRight="62dp"
-            android:background="@drawable/blue_fill__rounded_color"
-            android:fontFamily="@font/poppins_medium"
-            android:layout_gravity="center"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:text="Sign Up"
-            android:textColor="#000000"
-            android:gravity="center"/>
+
+        <RelativeLayout
+            android:layout_width="450dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            >
+
+            <TextView
+
+                android:id="@+id/signup"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="52dp"
+                android:layout_marginTop="18.7dp"
+                android:layout_marginRight="62dp"
+                android:background="@drawable/button_corners"
+                android:fontFamily="@font/adamina"
+                android:gravity="center"
+                android:padding="20dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="SignUp"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/booking_icon"
+                android:layout_width="24.7dp"
+                android:layout_height="20.3dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="45dp"
+                android:src="@drawable/signup" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/toLoginBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/poppins_medium"
             android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/adamina"
             android:text="i have an account !"
-            android:textColor="#000000"
-            android:textSize="10.5sp"/>
+            android:textColor="#0000EE"
+            android:textSize="10.5sp" />
         />
 
     </LinearLayout>

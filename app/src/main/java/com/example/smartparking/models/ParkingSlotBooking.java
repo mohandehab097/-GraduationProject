@@ -13,7 +13,6 @@ public class ParkingSlotBooking {
     private String licenseNumber;
     private String liceseCharacter;
     private String licenseNumbersAndCharacter;
-    private String sendNotification;
     private String Limittime;
     private boolean isArrived;
 
@@ -88,13 +87,7 @@ public class ParkingSlotBooking {
         this.licenseNumbersAndCharacter = licenseNumbersAndCharacter;
     }
 
-    public String getSendNotification() {
-        return sendNotification;
-    }
 
-    public void setSendNotification(String sendNotification) {
-        this.sendNotification = sendNotification;
-    }
 
     public String getLimittime() {
         return Limittime;

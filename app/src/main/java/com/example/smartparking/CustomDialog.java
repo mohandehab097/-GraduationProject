@@ -16,6 +16,7 @@ import com.example.smartparking.models.Incrementer;
 import com.example.smartparking.models.ParkingSlotBooking;
 import com.example.smartparking.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CustomDialog extends Dialog implements
         android.view.View.OnClickListener {
@@ -35,15 +40,18 @@ public class CustomDialog extends Dialog implements
     ParkingSlotBooking slotBooking;
     TextView bookingDate, bookingTime, carNumber, carCharacter;
     String userBookingDate, userBookingTime, userCarNumber, userCarCharacter;
-    Integer incrementValue=0;
+    Integer incrementValue = 0;
     Incrementer incrementer;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+
 
     public CustomDialog(Activity a, FirebaseUser authUser, ParkingSlotBooking slotBooking, String userBookingDate, String userBookingTime, String userCarNumber, String userCarCharacter) {
         super(a);
         // TODO Auto-generated constructor stub
 
         slotBooking.setArrived(false);
-        slotBooking.setSendNotification("OFF");
         this.c = a;
         this.authUser = authUser;
         this.slotBooking = slotBooking;
@@ -70,7 +78,7 @@ public class CustomDialog extends Dialog implements
         bookingTime.setText(userBookingTime);
         carCharacter.setText(userCarCharacter);
         carNumber.setText(userCarNumber);
-        incrementer=new Incrementer();
+        incrementer = new Incrementer();
         FirebaseDatabase.getInstance().getReference().child("incrementValue").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -93,6 +101,21 @@ public class CustomDialog extends Dialog implements
 
 
 
+
+
+
+
+                db.collection("UserBooking").document(authUser.getUid()).collection("userReservationDocument").document().set(slotBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                    }
+                });
+
+
+
+
+
                 FirebaseDatabase.getInstance().getReference("reservationLicense").child(incrementer.getIncrementValue().toString()).setValue(slotBooking.getLicenseNumbersAndCharacter()).addOnCompleteListener(new OnCompleteListener<Void>() {
 
 
@@ -101,15 +124,12 @@ public class CustomDialog extends Dialog implements
                         if (task.isSuccessful()) {
 
 
-
                         } else {
                             Toast.makeText(c, "User Registered Failed", Toast.LENGTH_LONG).show();
 
                         }
                     }
                 });
-
-
 
 
                 FirebaseDatabase.getInstance().getReference("UsersSlotBooking").child(authUser.getUid()).setValue(slotBooking).addOnCompleteListener(new OnCompleteListener<Void>() {

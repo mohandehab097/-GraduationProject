@@ -50,7 +50,7 @@ public class CounterBookingActivity extends AppCompatActivity {
     FirebaseUser authUser = auth.getCurrentUser();
     String userBookingDate = null;
     String userBookingTime = null;
-    long countDownToNewYear;
+    long countDown;
     TextView backToHomeBtn;
 
     @Override
@@ -92,10 +92,10 @@ public class CounterBookingActivity extends AppCompatActivity {
                     Date date = sdf.parse(countDate);
                     long currentTime = now.getTime();
                     long bookingDate = date.getTime();
-                    countDownToNewYear = bookingDate - currentTime;
-                    mCvCountdownView.start(countDownToNewYear);
+                    countDown = bookingDate - currentTime;
+                    mCvCountdownView.start(countDown);
 
-                    if (countDownToNewYear == 0 || countDownToNewYear < 0) {
+                    if (countDown == 0 || countDown < 0) {
                         goToHomePage();
                     }
 
@@ -107,9 +107,7 @@ public class CounterBookingActivity extends AppCompatActivity {
                         notificationManager.createNotificationChannel(notificationChannel);
                     }
 
-                    if (countDownToNewYear <= 200000 && countDownToNewYear>0) {
-//                        addNotification();
-                    }
+
 
                 } catch (ParseException e) {
                     e.printStackTrace();

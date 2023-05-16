@@ -50,7 +50,7 @@ public class ReservationActivity extends AppCompatActivity {
 
     EditText licenseCharacter, licenseNumbers, bookingDate, bookingTime;
 
-    TextView bookingBtn, errorDateMessage, errorTimeMessage, errorCarNumberMessage, errorCarCharacterMessage;
+    TextView bookingBtn, errorDateMessage, errorTimeMessage, errorCarNumberMessage, errorCarCharacterMessage,backToHome;
     ImageView errorDateIcon, errorTimeIcon, errorCarCharacterIcon, errorCarNumberIcon;
     FirebaseDatabase databasee = FirebaseDatabase.getInstance();
     DatabaseReference slotReff = databasee.getReference("ParkingSlots");
@@ -81,7 +81,15 @@ public class ReservationActivity extends AppCompatActivity {
         errorTimeIcon = findViewById(R.id.error_time_icon_credentials);
         validate = true;
         slotBooking = new ParkingSlotBooking();
+        backToHome=findViewById(R.id.backToHome);
 
+
+        backToHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToHomePage();
+            }
+        });
 
         List<String> slotsAvailability = new ArrayList<>();
 
@@ -317,8 +325,16 @@ public class ReservationActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(ReservationActivity.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        bookingTime.setText(selectedHour + ":" + selectedMinute);
-                        slotBooking.setLimittime(selectedHour+2+":"+selectedMinute);
+
+                        if(selectedHour>0&&selectedHour<9){
+                            bookingTime.setText("0"+selectedHour + ":" + selectedMinute);
+                            slotBooking.setLimittime("0"+(selectedHour+2)+":"+selectedMinute);
+                        }
+                        else{
+                            bookingTime.setText(selectedHour + ":" + selectedMinute);
+                            slotBooking.setLimittime(selectedHour+2+":"+selectedMinute);
+                        }
+
                     }
                 }, hour, minute, true);
                 mTimePicker.show();
@@ -431,5 +447,10 @@ public class ReservationActivity extends AppCompatActivity {
                 return false;
         }
         return true;
+    }
+
+    private void goToHomePage() {
+        startActivity(new Intent(ReservationActivity.this, HomeActivity.class));
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

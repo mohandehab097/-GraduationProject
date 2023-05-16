@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".HomeActivity">
+    tools:context=".UserReservation">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:orientation="vertical">
+
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -41,17 +42,15 @@
         </FrameLayout>
 
 
-
         <RelativeLayout
             android:layout_width="450dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="80dp"
             >
 
 
             <TextView
-
-                android:id="@+id/goToReservation"
+                android:id="@+id/currentReservation"
                 android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -64,7 +63,45 @@
                 android:padding="20dp"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
-                android:text="Book your Parking Slot now "
+                android:text="Current Reservation "
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/profile_icon"
+                android:layout_width="24.7dp"
+                android:layout_height="20.3dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="38dp"
+                android:src="@drawable/reservation" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:layout_width="450dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+
+            >
+
+
+            <TextView
+
+                android:id="@+id/historyReservation"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="52dp"
+                android:layout_marginTop="18.7dp"
+                android:layout_marginRight="62dp"
+                android:background="@drawable/button_corners"
+                android:fontFamily="@font/adamina"
+                android:gravity="center"
+                android:padding="20dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="History Reservation"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
@@ -78,148 +115,36 @@
         </RelativeLayout>
 
 
-
-        <RelativeLayout
-            android:layout_width="450dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="10dp"
-            >
-
-
-            <TextView
-                android:id="@+id/reservationData"
-                android:layout_width="270dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="52dp"
-                android:layout_marginTop="18.7dp"
-                android:layout_marginRight="62dp"
-                android:background="@drawable/button_corners"
-                android:fontFamily="@font/adamina"
-                android:gravity="center"
-                android:padding="20dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:text="Your Reservations"
-                android:textColor="#000000"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/reservation_icon"
-                android:layout_width="24.7dp"
-                android:layout_height="20.3dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="38dp"
-                android:src="@drawable/booking" />
-        </RelativeLayout>
-
-
-
-        <RelativeLayout
-            android:layout_width="450dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="10dp"
-            >
-
-
-            <TextView
-                android:id="@+id/goToProfile"
-                android:layout_width="270dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="52dp"
-                android:layout_marginTop="18.7dp"
-                android:layout_marginRight="62dp"
-                android:background="@drawable/button_corners"
-                android:fontFamily="@font/adamina"
-                android:gravity="center"
-                android:padding="20dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:text="Your Profile "
-                android:textColor="#000000"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/profile_icon"
-                android:layout_width="24.7dp"
-                android:layout_height="20.3dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="38dp"
-                android:src="@drawable/prodile" />
-        </RelativeLayout>
-
-
-
-
-
-        <RelativeLayout
-            android:layout_width="450dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="10dp"
-
-            >
-
-            <TextView
-
-                android:id="@+id/AboutUs"
-                android:layout_width="270dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="52dp"
-                android:layout_marginTop="18.7dp"
-                android:layout_marginRight="62dp"
-                android:background="@drawable/button_corners"
-                android:fontFamily="@font/adamina"
-                android:gravity="center"
-                android:padding="20dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:text="About Us "
-                android:textColor="#000000"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/aboutus_icon"
-                android:layout_width="24.7dp"
-                android:layout_height="20.3dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="42dp"
-                android:src="@drawable/info" />
-        </RelativeLayout>
-
         <RelativeLayout
             android:layout_width="450dp"
             android:layout_height="150dp"
             android:layout_marginTop="20dp"
             >
 
-
             <TextView
-                android:id="@+id/logoutBtn"
-                android:layout_width="140dp"
+                android:id="@+id/backHomePage"
+                android:layout_width="230dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="120dp"
-                android:layout_marginRight="62dp"
-
+                android:layout_marginLeft="72dp"
+                android:layout_marginTop="18.7dp"
                 android:background="@drawable/button_corners"
                 android:fontFamily="@font/adamina"
                 android:gravity="center"
                 android:padding="20dp"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
-                android:text="Log Out "
+                android:text="Home Page"
                 android:textColor="#000000"
                 android:textStyle="bold" />
-    <ImageView
-        android:id="@+id/logout_icon"
-        android:layout_width="24.7dp"
-        android:layout_height="20.3dp"
-        android:layout_marginLeft="130dp"
-        android:layout_marginTop="25dp"
-        android:src="@drawable/logout" />
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/backHomePage_icon"
+                android:layout_width="24.7dp"
+                android:layout_height="20.3dp"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="38dp"
+                android:src="@drawable/backbtn" />
+        </RelativeLayout>
 
 
 

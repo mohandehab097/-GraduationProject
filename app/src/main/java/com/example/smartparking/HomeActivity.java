@@ -24,37 +24,40 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
 
-    TextView username,email,userId,phoneNumber;
-    TextView logout,reservationBtn,profileBtn;
-    String userEmail="";
-    String userUid="";
-    String userName="";
-    String userPhoneNumber="";
-    FirebaseAuth auth=FirebaseAuth.getInstance();
+    TextView reservationDatBtn;
+    TextView logout, reservationBtn, profileBtn;
+
+    FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser authUser = auth.getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-//    DatabaseReference myRef = database.getReference("Users");
+
     DatabaseReference slotRef = database.getReference("ParkingSlots");
-    String UID=authUser.getUid();
-    String x="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        reservationBtn=findViewById(R.id.goToReservation);
+        reservationBtn = findViewById(R.id.goToReservation);
+        reservationDatBtn=findViewById(R.id.reservationData);
+
+        logout = findViewById(R.id.logoutBtn);
+        profileBtn = findViewById(R.id.goToProfile);
+        List<String> slotsAvailability = new ArrayList<>();
 
 
-        logout=findViewById(R.id.logoutBtn);
-        profileBtn=findViewById(R.id.goToProfile);
-        List<String> slotsAvailability=new ArrayList<>();
 
-
+        reservationDatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToUserReservationsPage();
+            }
+        });
 
         slotRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for(DataSnapshot ds: snapshot.getChildren()) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
 
 //                    ParkingSlots parkingSlots = ds.getValue(ParkingSlots.class);
 
@@ -72,7 +75,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
 
 
 //        myRef.child(UID).addValueEventListener(new ValueEventListener() {
@@ -101,44 +103,39 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-
-                    startActivity(new Intent(HomeActivity.this, ReservationActivity.class));
-                    overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
-                    slotsAvailability.clear();
-
+                startActivity(new Intent(HomeActivity.this, ReservationActivity.class));
+                overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
+                slotsAvailability.clear();
 
 
             }
         });
 
 
-
-
-
     }
 
-    private void logout(){
+    private void logout() {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 auth.signOut();
-                startActivity(new Intent(HomeActivity.this,SecondActivity.class));
+                startActivity(new Intent(HomeActivity.this, SecondActivity.class));
                 overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
 
             }
         });
     }
-    private void goToProfileActivity(){
+
+    private void goToProfileActivity() {
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this,UserProfileActivity.class));
-                overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
+                startActivity(new Intent(HomeActivity.this, UserProfileActivity.class));
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
             }
         });
     }
-
 
 
 //    private void goToReservation(){
@@ -151,12 +148,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
         Intent intent = getIntent();
         String str = intent.getStringExtra("noSlots");
-        if(str!=null&&!str.isEmpty()&&str.equals("ShowErrorDialog")){
-            ErrorDialog cdd=new ErrorDialog(HomeActivity.this);
+        if (str != null && !str.isEmpty() && str.equals("ShowErrorDialog")) {
+            ErrorDialog cdd = new ErrorDialog(HomeActivity.this);
             cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            cdd.getWindow().getAttributes().windowAnimations=R.style.CustomDialogAnimation;
+            cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
             cdd.show();
         }
 
+    }
+
+    private void goToUserReservationsPage (){
+        startActivity(new Intent(HomeActivity.this, UserReservation.class));
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

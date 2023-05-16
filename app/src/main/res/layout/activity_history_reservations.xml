@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".HomeActivity">
+
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="223dp"
+            android:background="@drawable/backg">
+
+            <ImageView
+                android:layout_width="77dp"
+                android:layout_height="77dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="73dp"
+                android:src="@drawable/car" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="150dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:letterSpacing="0.5"
+                android:text="RAKNII"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userReserve"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_user_reservation" />
+
+        <TextView
+            android:id="@+id/noBooking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="150dp"
+            android:text="You Have No History Reservations !"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+        <RelativeLayout
+            android:id="@+id/layoutGoToBooking"
+            android:layout_width="450dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/goToBooking"
+                android:layout_width="230dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="72dp"
+                android:layout_marginTop="18.7dp"
+                android:background="@drawable/button_corners"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:padding="20dp"
+
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Book Now!"
+                android:textColor="#000000" />
+
+            <ImageView
+                android:id="@+id/goToBookingLabel"
+                android:layout_width="24.7dp"
+                android:layout_height="20.3dp"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="38dp"
+                android:src="@drawable/booking" />
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
+
+
+

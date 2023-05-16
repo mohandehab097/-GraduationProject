@@ -7,9 +7,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,7 +26,9 @@ import android.widget.TextView;
 
 import com.example.smartparking.models.ParkingSlotBooking;
 import com.example.smartparking.models.PaymentNotification;
-import com.example.smartparking.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,9 +36,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,10 +55,9 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Animation topAnim, bottomAnim;
+    private Animation bottomAnim;
     private ImageView icon;
-    private TextView title, secondTitle;
-    String checkEmail;
+    private TextView title;
     DatabaseReference rootRefernce;
     DatabaseReference slotRefernce;
     private final static int SPLASH_SCREEN = 3000;
@@ -71,12 +76,10 @@ public class MainActivity extends AppCompatActivity {
     String userLicenseNumber = null;
     Date date;
     Date date2;
-    String userBookingDate = null;
-    String userBookingTime = null;
-
     DateFormat dateFormat;
     String today;
-    long countDownToNewYear;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
-
         if (slotRefernce != null && uid != null) {
             slotRefernce.child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -118,10 +118,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 String maxDate = slotBooking.getStrBookingDate() + " " + slotBooking.getLimittime();
                                 String bookingDateTime = slotBooking.getStrBookingDate() + " " + slotBooking.getTime();
-                                boolean arrived=slotBooking.isArrived();
+                                boolean arrived = slotBooking.isArrived();
                                 checkDateBeforeBookingWithFewMinutes(bookingDateTime);
 
-                                checkDateNow(maxDate,arrived);
+                                checkDateNow(maxDate, arrived);
 
                             }
                         }
@@ -139,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
         createAnimation();
         goToSecondPage();
+
+
     }
 
 
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Animations
-        topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
+
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
         icon = this.findViewById(R.id.logo);
         title = findViewById(R.id.title);
@@ -260,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "limitNotifiy");
         builder.setContentTitle("RAKNII");
-        builder.setContentText("Sorry You Are Late! Your Reservation Is Cancelled");
+        builder.setContentText("Sorry! You Are late,Your Reservation Is Cancelled");
         final long[] DEFAULT_VIBRATE_PATTERN = {0, 250, 250, 250};
         builder.setSmallIcon(R.mipmap.icon);
         builder.setAutoCancel(true);
@@ -279,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void sendNotificationWhenBookingTimeNear(){
+    private void sendNotificationWhenBookingTimeNear() {
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "soon");
@@ -292,77 +294,89 @@ public class MainActivity extends AppCompatActivity {
         builder.setPriority(NotificationCompat.PRIORITY_HIGH);
         builder.setVibrate(DEFAULT_VIBRATE_PATTERN);
         builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
-        Intent intent=new Intent(this,CounterBookingActivity.class);
+        Intent intent = new Intent(this, CounterBookingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         builder.setContentIntent(pendingIntent);
-        NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(MainActivity.this);
-        notificationManagerCompat.notify(1,builder.build());
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
+        notificationManagerCompat.notify(1, builder.build());
 
     }
 
-    private void checkDateNow(String maxDate,boolean isArrived){
+    private void checkDateNow(String maxDate, boolean isArrived) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 date = Calendar.getInstance().getTime();
 
-                dateFormat = new SimpleDateFormat("dd/MM/yyyy H:mm");
+                dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
                 today = dateFormat.format(date);
-                if (maxDate.equals(today)&&!isArrived) {
+                if (maxDate.equals(today) && !isArrived) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel notificationChannel = new NotificationChannel("limitNotifiy", "limitNotifiy", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationChannel.setShowBadge(true);
+                        notificationChannel.enableLights(true);
                         notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
                         notificationManager.createNotificationChannel(notificationChannel);
                     }
                     addLimitTimeNotification();
+                    deleteUserBooking();
                     handler.removeCallbacks(this);
                 }
-                handler.postDelayed(this, 15 * 1000);
+                handler.postDelayed(this, 45 * 1000);
             }
         };
 
         runnable.run();
     }
 
-    private void checkDateBeforeBookingWithFewMinutes(String bookingDateTime){
+    private void checkDateBeforeBookingWithFewMinutes(String bookingDateTime) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 date2 = Calendar.getInstance().getTime();
 
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy H:mm");
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-               String today = dateFormat.format(date2);
+                String today = dateFormat.format(date2);
 
-                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy H:mm", Locale.ENGLISH);
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.ENGLISH);
 
 
-                LocalDateTime ldt = LocalDateTime.parse(bookingDateTime,dateFormatter);
+                LocalDateTime ldt = LocalDateTime.parse(bookingDateTime, dateFormatter);
                 ldt = ldt.minusMinutes(30);
+
 
                 if (today.equals(ldt.format(dateFormatter))) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel notificationChannel = new NotificationChannel("soon", "soon", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationChannel.setShowBadge(true);
+                        notificationChannel.enableLights(true);
+                        notificationChannel.enableVibration(true);
                         notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
                         notificationManager.createNotificationChannel(notificationChannel);
                     }
                     sendNotificationWhenBookingTimeNear();
                     handler2.removeCallbacks(this);
                 }
-                handler2.postDelayed(this, 15 * 1000);
+                handler2.postDelayed(this, 39 * 1000);
             }
         };
 
         runnable.run();
     }
 
+    private void deleteUserBooking() {
+        if (slotRefernce != null && uid != null) {
+            slotRefernce.child(uid).removeValue();
+
+        }
+
+    }
 
 }

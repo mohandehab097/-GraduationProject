@@ -20,37 +20,41 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Your Booking Data"
         android:layout_marginBottom="4dp"
+        android:fontFamily="@font/adamina"
+        android:text="Your Booking Data"
         android:textAlignment="center"
+        android:textColor="#FFC107"
         android:textSize="16dp"
-        android:textStyle="bold"
-        android:fontFamily="@font/poppins_regular"
-        android:textColor="#FFC107"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:padding="5dp"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/dateLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
+            android:fontFamily="@font/adamina"
             android:text="Your Booking Date :"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1/6/2019"
             android:layout_marginLeft="4dp"
+            android:fontFamily="@font/adamina"
+            android:text="1/6/2019"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 
@@ -60,23 +64,27 @@
         android:padding="5dp"
 
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/timeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/adamina"
             android:text="Your Expected Booking Time :"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10:56"
             android:layout_marginLeft="4dp"
+            android:fontFamily="@font/adamina"
+            android:text="10:56"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 
@@ -84,60 +92,70 @@
         android:layout_width="wrap_content"
         android:padding="5dp"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/carNumberLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/adamina"
             android:text="Your Car Number :"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/carNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
+            android:fontFamily="@font/adamina"
             android:text="9995"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:padding="5dp"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/carCharacterLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
+            android:fontFamily="@font/adamina"
             android:text="Your Car Character :"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/carCharacter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
+            android:fontFamily="@font/adamina"
             android:text="س أ ب"
             android:textColor="@android:color/black"
             android:textSize="12dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
+
     <TextView
         android:id="@+id/txt_dia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
+        android:fontFamily="@font/adamina"
         android:text="Are You Sure From Your Data! Dou Want Confirm Booking ?"
         android:textColor="@android:color/black"
         android:textSize="12dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -151,9 +169,10 @@
             android:id="@+id/btn_confrim"
             android:layout_width="100dp"
             android:layout_height="30dp"
-            android:background="@drawable/blue_fill__rounded_color"
+            android:background="@drawable/button_corners"
             android:clickable="true"
 
+            android:fontFamily="@font/adamina"
             android:text="Confirm"
             android:textColor="@color/black"
             android:textStyle="bold" />
@@ -163,8 +182,9 @@
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/blue_fill__rounded_color"
+            android:background="@drawable/button_corners"
             android:clickable="true"
+            android:fontFamily="@font/adamina"
             android:text="Cancel"
             android:textColor="@color/black"
             android:textStyle="bold" />
