@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -113,6 +114,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
+
+
+
 
     private void logout() {
         logout.setOnClickListener(new View.OnClickListener() {

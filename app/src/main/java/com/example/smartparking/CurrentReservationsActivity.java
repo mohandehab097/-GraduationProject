@@ -1,55 +1,80 @@
 package com.example.smartparking;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.smartparking.models.ParkingSlotBooking;
+import com.example.smartparking.utils.CurrentUserReservationAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CurrentReservationsActivity extends AppCompatActivity {
 
 
-    TextView backUserReservationBtn, bookingDate, bookingTime, carNumbers, carCharacter, timeAllowed,noBooking,goToBooking,cancelReservation;
-    CardView bookingData;
-    RelativeLayout layoutGoToBooking,cancelReservationLayout;
-    DatabaseReference rootRef;
-    DatabaseReference slotRefernce;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser authUser = auth.getCurrentUser();
+    TextView goToBooking,noBookingText,cancelReservation,backUserReservation;
+    ImageView cancelReservationIcon;
+    RecyclerView userReservationList;
+    List<ParkingSlotBooking> parkingSlotBookings;
+    CurrentUserReservationAdapter adapter;
+    RelativeLayout layoutGoToBooking;
+    RelativeLayout cancelReservationLayout;
+    DatabaseReference rootRef;
+    DatabaseReference slotRefernce;
     String uid;
+    Query userBookingQueryDelete ;
+    CollectionReference collectionReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_reservations);
-        backUserReservationBtn = findViewById(R.id.backUserReservationBtn);
-        bookingDate = findViewById(R.id.bookingDate);
-        bookingTime = findViewById(R.id.bookingTime);
-        carCharacter = findViewById(R.id.carCharacter);
-        carNumbers = findViewById(R.id.carNumber);
-        timeAllowed = findViewById(R.id.allowLateTime);
-        noBooking = findViewById(R.id.noBooking);
+        userReservationList = findViewById(R.id.userReserve);
         goToBooking = findViewById(R.id.goToBooking);
-        bookingData=findViewById(R.id.bookingData);
+        noBookingText=findViewById(R.id.noBooking);
         layoutGoToBooking=findViewById(R.id.layoutGoToBooking);
         cancelReservation=findViewById(R.id.cancelReservation);
+        backUserReservation=findViewById(R.id.backUserReservationBtn);
+        cancelReservationIcon=findViewById(R.id.cancelReservation_icon);
         cancelReservationLayout=findViewById(R.id.cancelReservationLayout);
+        adapter= new CurrentUserReservationAdapter(CurrentReservationsActivity.this);
+
+         collectionReference = FirebaseFirestore.getInstance()
+                .collection("UserBooking").document(authUser.getUid()).collection("userReservationDocument");
+
+         userBookingQueryDelete = collectionReference.whereEqualTo("reservationEnds",false);
+        parkingSlotBookings=new ArrayList<>();
+        userReservationList.setAdapter(adapter);
 
         if (authUser != null) {
             uid = authUser.getUid();
@@ -59,79 +84,13 @@ public class CurrentReservationsActivity extends AppCompatActivity {
 
 
 
-        cancelReservation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showCancelReservationDialog();
-            }
-        });
-
-
-        if (slotRefernce != null && uid != null) {
-            slotRefernce.child(uid).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                    ParkingSlotBooking slotBooking = snapshot.getValue(ParkingSlotBooking.class);
-
-                    if (slotBooking != null) {
-                        bookingDate.setText(slotBooking.getStrBookingDate().trim());
-                        bookingTime.setText(slotBooking.getTime().trim());
-                        carCharacter.setText(slotBooking.getLiceseCharacter().trim());
-                        carNumbers.setText(slotBooking.getLicenseNumber().trim());
-                        timeAllowed.setText(slotBooking.getLimittime().trim());
-                        goToBooking.setVisibility(View.GONE);
-                        noBooking.setVisibility(View.GONE);
-                        layoutGoToBooking.setVisibility(View.GONE);
-
-                    }
-
-                    else{
-                        bookingData.setVisibility(View.GONE);
-                        layoutGoToBooking.setVisibility(View.VISIBLE);
-                        goToBooking.setVisibility(View.VISIBLE);
-                        noBooking.setVisibility(View.VISIBLE);
-                        cancelReservationLayout.setVisibility(View.GONE);
-                        bookingDate.setVisibility(View.GONE);
-                        bookingTime.setVisibility(View.GONE);
-                        carCharacter.setVisibility(View.GONE);
-                        carNumbers.setVisibility(View.GONE);
-                        timeAllowed.setVisibility(View.GONE);
-                    }
 
 
 
 
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+        if (collectionReference != null) {
+            getUserBookingData(false);
         }
-
-        else{
-            cancelReservationLayout.setVisibility(View.GONE);
-            bookingData.setVisibility(View.GONE);
-            layoutGoToBooking.setVisibility(View.VISIBLE);
-            goToBooking.setVisibility(View.VISIBLE);
-            noBooking.setVisibility(View.VISIBLE);
-            bookingDate.setVisibility(View.GONE);
-            bookingTime.setVisibility(View.GONE);
-            carCharacter.setVisibility(View.GONE);
-            carNumbers.setVisibility(View.GONE);
-            timeAllowed.setVisibility(View.GONE);
-        }
-
-
-        backUserReservationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToUserReservationPage();
-            }
-        });
 
         goToBooking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +98,107 @@ public class CurrentReservationsActivity extends AppCompatActivity {
                 goToBookingPage();
             }
         });
+
+        cancelReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseFirestore.getInstance()
+                        .collection("UserBooking").document(FirebaseAuth.getInstance()
+                                .getCurrentUser().getUid()).collection("userReservationDocument")
+                        .whereEqualTo("reservationEnds",false)
+                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                WriteBatch writeBatch=FirebaseFirestore.getInstance().batch();
+                                List<DocumentSnapshot>snapshotList=queryDocumentSnapshots.getDocuments();
+                                for(DocumentSnapshot snapshot:snapshotList){
+                                    writeBatch.delete(snapshot.getReference());
+
+                                }
+                                writeBatch.commit();
+                            }
+                        });
+
+                if (slotRefernce != null && uid != null) {
+                    slotRefernce.child(uid).removeValue();
+
+                }
+
+                parkingSlotBookings.clear();
+                adapter.notifyDataSetChanged();
+                getUserBookingData(true);
+            }
+        });
+
+        backUserReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToUserReservationPage();
+            }
+        });
+
+
+
     }
+
+    private void getUserBookingData(boolean checkDelete){
+
+        collectionReference.whereEqualTo("reservationEnds",false).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                for (QueryDocumentSnapshot document : task.getResult()) {
+
+
+                    ParkingSlotBooking slotBooking = document.toObject(ParkingSlotBooking.class);
+                    slotBooking.setDocumentId(document.getId());
+                    if (slotBooking != null) {
+                        parkingSlotBookings.add(slotBooking);
+                    }
+
+                }
+                if(checkDelete){
+                    parkingSlotBookings.clear();
+                }
+
+                if(!parkingSlotBookings.isEmpty()||parkingSlotBookings.size()>0){
+                    adapter.submitList(parkingSlotBookings);
+                    goToBooking.setVisibility(View.GONE);
+                    layoutGoToBooking.setVisibility(View.GONE);
+                    noBookingText.setVisibility(View.GONE);
+                    cancelReservation.setVisibility(View.VISIBLE);
+                    cancelReservationIcon.setVisibility(View.VISIBLE);
+                    cancelReservationLayout.setVisibility(View.VISIBLE);
+                }
+                else{
+                    userReservationList.setVisibility(View.GONE);
+                    cancelReservationIcon.setVisibility(View.GONE);
+                    goToBooking.setVisibility(View.VISIBLE);
+                    noBookingText.setVisibility(View.VISIBLE);
+                    layoutGoToBooking.setVisibility(View.VISIBLE);
+                    cancelReservation.setVisibility(View.GONE);
+                    cancelReservationLayout.setVisibility(View.GONE);
+                }
+
+
+            }
+        });
+    }
+
+
+//    private void showCancelReservationDialog() {
+//        if (slotRefernce != null && uid != null) {
+//        DeleteReservationDialog deleteReservationDialog = new DeleteReservationDialog(CurrentReservationsActivity.this, slotRefernce.child(uid),userBookingQueryDelete,collectionReference);
+//        deleteReservationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        deleteReservationDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
+//        deleteReservationDialog.show();
+//        }
+//
+//        getUserBookingData();
+//
+//
+//    }
+
 
 
     private void goToUserReservationPage() {
@@ -153,16 +212,4 @@ public class CurrentReservationsActivity extends AppCompatActivity {
 
     }
 
-
-
-    private void showCancelReservationDialog() {
-
-        if (slotRefernce != null && uid != null) {
-
-        }
-        DeleteReservationDialog deleteReservationDialog = new DeleteReservationDialog(CurrentReservationsActivity.this, slotRefernce.child(uid));
-        deleteReservationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        deleteReservationDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-        deleteReservationDialog.show();
-    }
 }

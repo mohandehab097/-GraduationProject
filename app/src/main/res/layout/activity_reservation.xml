@@ -42,6 +42,45 @@
 
         </FrameLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="50dp">
+
+
+            <ImageView
+                android:id="@+id/error_old_date_icon"
+                android:layout_width="16.7dp"
+                android:layout_height="13.3dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/error"
+
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/oldDateCredentials"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You Can't Choose Date before"
+                android:textColor="@color/red"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/todayDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
 
         <RelativeLayout
             android:layout_width="300dp"

@@ -6,9 +6,9 @@ public class Payment {
     private Integer stayedHourTime;
     private Integer stayedMinutesTime;
     private Integer theAmount;
+    private String date;
 
-
-    public Payment(){
+    public Payment() {
 
     }
 
@@ -43,5 +43,13 @@ public class Payment {
 
     public void setTheAmount(Integer theAmount) {
         this.theAmount = theAmount;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

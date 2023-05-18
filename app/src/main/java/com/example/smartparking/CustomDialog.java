@@ -52,6 +52,7 @@ public class CustomDialog extends Dialog implements
         // TODO Auto-generated constructor stub
 
         slotBooking.setArrived(false);
+        slotBooking.setReservationEnds(false);
         this.c = a;
         this.authUser = authUser;
         this.slotBooking = slotBooking;

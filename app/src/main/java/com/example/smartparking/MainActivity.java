@@ -44,6 +44,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,6 +52,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
     DateFormat dateFormat;
     String today;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    boolean checkLimitTime=false;
+    boolean checkNearTime=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,13 +312,16 @@ public class MainActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+
+
                 date = Calendar.getInstance().getTime();
 
                 dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
                 today = dateFormat.format(date);
-                if (maxDate.equals(today) && !isArrived) {
+                if (maxDate.equals(today) && !isArrived&&!checkLimitTime) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        checkLimitTime=true;
                         NotificationChannel notificationChannel = new NotificationChannel("limitNotifiy", "limitNotifiy", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationChannel.setShowBadge(true);
@@ -327,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
                     deleteUserBooking();
                     handler.removeCallbacks(this);
                 }
-                handler.postDelayed(this, 45 * 1000);
+                handler.postDelayed(this, 10 * 1000);
             }
         };
 
@@ -338,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+
                 date2 = Calendar.getInstance().getTime();
 
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -351,8 +358,9 @@ public class MainActivity extends AppCompatActivity {
                 ldt = ldt.minusMinutes(30);
 
 
-                if (today.equals(ldt.format(dateFormatter))) {
+                if (today.equals(ldt.format(dateFormatter))&&!checkNearTime) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        checkNearTime=true;
                         NotificationChannel notificationChannel = new NotificationChannel("soon", "soon", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationChannel.setShowBadge(true);
@@ -364,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
                     sendNotificationWhenBookingTimeNear();
                     handler2.removeCallbacks(this);
                 }
-                handler2.postDelayed(this, 39 * 1000);
+                handler2.postDelayed(this, 10 * 1000);
             }
         };
 
@@ -376,6 +384,23 @@ public class MainActivity extends AppCompatActivity {
             slotRefernce.child(uid).removeValue();
 
         }
+
+        FirebaseFirestore.getInstance()
+                .collection("UserBooking").document(FirebaseAuth.getInstance()
+                        .getCurrentUser().getUid()).collection("userReservationDocument")
+                .whereEqualTo("reservationEnds", false)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        WriteBatch writeBatch = FirebaseFirestore.getInstance().batch();
+                        List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot snapshot : snapshotList) {
+                            writeBatch.delete(snapshot.getReference());
+
+                        }
+                        writeBatch.commit();
+                    }
+                });
 
     }
 

@@ -15,6 +15,8 @@ public class ParkingSlotBooking {
     private String licenseNumbersAndCharacter;
     private String Limittime;
     private boolean isArrived;
+    private boolean reservationEnds;
+    private String documentId;
 
 
 
@@ -103,5 +105,21 @@ public class ParkingSlotBooking {
 
     public void setArrived(boolean arrived) {
         isArrived = arrived;
+    }
+
+    public boolean isReservationEnds() {
+        return reservationEnds;
+    }
+
+    public void setReservationEnds(boolean reservationEnds) {
+        this.reservationEnds = reservationEnds;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

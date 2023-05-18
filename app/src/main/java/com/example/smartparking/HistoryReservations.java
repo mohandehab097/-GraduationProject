@@ -28,7 +28,7 @@ public class HistoryReservations extends AppCompatActivity {
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser authUser = auth.getCurrentUser();
-    TextView goToBooking,noBookingText;
+    TextView goToBooking,noBookingText,backUserReservation;
     RecyclerView userReservationList;
     List<ParkingSlotBooking> parkingSlotBookings;
     UserReservationAdapter adapter;
@@ -43,14 +43,15 @@ public class HistoryReservations extends AppCompatActivity {
         goToBooking = findViewById(R.id.goToBooking);
         noBookingText=findViewById(R.id.noBooking);
         layoutGoToBooking=findViewById(R.id.layoutGoToBooking);
-        adapter= new UserReservationAdapter();
+        backUserReservation=findViewById(R.id.backUserReservationBtn);
+        adapter= new UserReservationAdapter(HistoryReservations.this,HistoryReservations.this);
         parkingSlotBookings=new ArrayList<>();
         userReservationList.setAdapter(adapter);
         CollectionReference collectionReference = FirebaseFirestore.getInstance()
                 .collection("UserBooking").document(authUser.getUid()).collection("userReservationDocument");
         if (collectionReference != null) {
 
-            collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            collectionReference.whereEqualTo("reservationEnds",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -89,6 +90,13 @@ public class HistoryReservations extends AppCompatActivity {
                 goToBookingPage();
             }
         });
+
+        backUserReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToUserReservationPage();
+            }
+        });
     }
 
 
@@ -97,6 +105,12 @@ public class HistoryReservations extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
     }
+
+    private void goToUserReservationPage() {
+        startActivity(new Intent(HistoryReservations.this, UserReservation.class));
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
 
 
 }

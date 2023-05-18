@@ -168,7 +168,7 @@
 
 
                 <Button
-                    android:id="@+id/cash"
+                    android:id="@+id/cashBtn"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:background="@drawable/button_corners"
@@ -179,7 +179,7 @@
                     android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/btn_cancel"
+                    android:id="@+id/visaBtn"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="5dp"

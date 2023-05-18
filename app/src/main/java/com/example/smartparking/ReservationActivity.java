@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,8 +51,8 @@ public class ReservationActivity extends AppCompatActivity {
 
     EditText licenseCharacter, licenseNumbers, bookingDate, bookingTime;
 
-    TextView bookingBtn, errorDateMessage, errorTimeMessage, errorCarNumberMessage, errorCarCharacterMessage,backToHome;
-    ImageView errorDateIcon, errorTimeIcon, errorCarCharacterIcon, errorCarNumberIcon;
+    TextView bookingBtn, errorDateMessage, errorOldDateMessage, errorTodayDateMessage, errorTimeMessage, errorCarNumberMessage, errorCarCharacterMessage, backToHome;
+    ImageView errorDateIcon, errorOldDateIcon, errorTimeIcon, errorCarCharacterIcon, errorCarNumberIcon;
     FirebaseDatabase databasee = FirebaseDatabase.getInstance();
     DatabaseReference slotReff = databasee.getReference("ParkingSlots");
     FirebaseAuth auth;
@@ -75,13 +76,16 @@ public class ReservationActivity extends AppCompatActivity {
         errorCarNumberIcon = findViewById(R.id.error_icon_car_number);
         errorCarNumberMessage = findViewById(R.id.carNumberValidation);
         bookingBtn = findViewById(R.id.bookingBtn);
+        errorOldDateMessage = findViewById(R.id.oldDateCredentials);
+        errorOldDateIcon = findViewById(R.id.error_old_date_icon);
+        errorTodayDateMessage = findViewById(R.id.todayDate);
         errorDateMessage = findViewById(R.id.dateCredentials);
         errorTimeMessage = findViewById(R.id.timeCredentials);
         errorDateIcon = findViewById(R.id.error_date_icon_credentials);
         errorTimeIcon = findViewById(R.id.error_time_icon_credentials);
         validate = true;
         slotBooking = new ParkingSlotBooking();
-        backToHome=findViewById(R.id.backToHome);
+        backToHome = findViewById(R.id.backToHome);
 
 
         backToHome.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +107,7 @@ public class ReservationActivity extends AppCompatActivity {
 
                     slotsAvailability.add(ds.getValue().toString());
                 }
-             fullParking = new ArrayList<>();
+                fullParking = new ArrayList<>();
 
 
                 boolean validBooking = false;
@@ -117,10 +121,6 @@ public class ReservationActivity extends AppCompatActivity {
                 }
 
                 slotsAvailability.clear();
-
-
-
-
 
 
             }
@@ -230,6 +230,34 @@ public class ReservationActivity extends AppCompatActivity {
                 Date bookingDate = null;
                 try {
                     bookingDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+                    Date now = Calendar.getInstance().getTime();
+                    Calendar c1 = Calendar.getInstance();
+                    Calendar c2 = Calendar.getInstance();
+
+                    c1.setTime(bookingDate);
+                    c2.setTime(now);
+                    int yearDiff = c1.get(Calendar.YEAR) - c2.get(Calendar.YEAR);
+                    int monthDiff = c1.get(Calendar.MONTH) - c2.get(Calendar.MONTH);
+                    int dayDiff = c1.get(Calendar.DAY_OF_MONTH) - c2.get(Calendar.DAY_OF_MONTH);
+
+                    if (yearDiff < 0 || monthDiff < 0 || dayDiff < 0) {
+                        bookingBtn.setEnabled(false);
+                        bookingBtn.getBackground().setAlpha(148);
+                        errorOldDateMessage.setVisibility(View.VISIBLE);
+                        errorOldDateIcon.setVisibility(View.VISIBLE);
+                        errorTodayDateMessage.setVisibility(View.VISIBLE);
+                        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String today = dateFormat.format(now);
+                        errorTodayDateMessage.setText(" " + today + "");
+                    } else {
+                        errorOldDateMessage.setVisibility(View.GONE);
+                        errorOldDateIcon.setVisibility(View.GONE);
+                        errorTodayDateMessage.setVisibility(View.GONE);
+                        bookingBtn.setBackgroundResource(R.drawable.button_corners);
+                        bookingBtn.setEnabled(true);
+                    }
+
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -255,14 +283,13 @@ public class ReservationActivity extends AppCompatActivity {
                 Date date = Calendar.getInstance().getTime();
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String today = dateFormat.format(date);
-                if (fullParking.size() == 0&&bookingDate.getText().toString().equals(today)) {
+                if (fullParking.size() == 0 && bookingDate.getText().toString().equals(today)) {
                     Intent intent = new Intent(ReservationActivity.this, HomeActivity.class);
                     intent.putExtra("noSlots", "ShowErrorDialog");
                     startActivity(intent);
                     overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
                     fullParking.clear();
                     slotsAvailability.clear();
-
 
 
                 }
@@ -296,10 +323,9 @@ public class ReservationActivity extends AppCompatActivity {
                 String licenseCharacters = licenseCharacter.getText().toString();
 
 
-
-                String licenseCharacterWithSpaces= licenseCharacters.replace("", " ").trim();
-                String licenseNumbersWithSpaces= licenseNumber.replace("", " ").trim();
-                String licenseNumbersAndCharacter = licenseNumbersWithSpaces+" "+licenseCharacterWithSpaces;
+                String licenseCharacterWithSpaces = licenseCharacters.replace("", " ").trim();
+                String licenseNumbersWithSpaces = licenseNumber.replace("", " ").trim();
+                String licenseNumbersAndCharacter = licenseNumbersWithSpaces + " " + licenseCharacterWithSpaces;
 
 
                 validate = validateData();
@@ -325,15 +351,34 @@ public class ReservationActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(ReservationActivity.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        String selectedMinuteWithExtraZero = null;
+                        if (selectedMinute >= 0 && selectedMinute <= 9) {
 
-                        if(selectedHour>0&&selectedHour<9){
-                            bookingTime.setText("0"+selectedHour + ":" + selectedMinute);
-                            slotBooking.setLimittime("0"+(selectedHour+2)+":"+selectedMinute);
+                            selectedMinuteWithExtraZero = "0" + selectedMinute;
                         }
-                        else{
-                            bookingTime.setText(selectedHour + ":" + selectedMinute);
-                            slotBooking.setLimittime(selectedHour+2+":"+selectedMinute);
+
+                        if (selectedMinuteWithExtraZero == null) {
+                            if (selectedHour > 0 && selectedHour <= 9) {
+                                bookingTime.setText("0" + selectedHour + ":" + selectedMinute);
+                                slotBooking.setLimittime("0" + (selectedHour + 2) + ":" + selectedMinute);
+                            } else {
+                                bookingTime.setText(selectedHour + ":" + selectedMinute);
+                                slotBooking.setLimittime(selectedHour + 2 + ":" + selectedMinute);
+                            }
+
                         }
+
+                        else
+                        {
+                            if (selectedHour > 0 && selectedHour <= 9) {
+                                bookingTime.setText("0" + selectedHour + ":" + selectedMinuteWithExtraZero);
+                                slotBooking.setLimittime("0" + (selectedHour + 2) + ":" + selectedMinuteWithExtraZero);
+                            } else {
+                                bookingTime.setText(selectedHour + ":" + selectedMinuteWithExtraZero);
+                                slotBooking.setLimittime(selectedHour + 2 + ":" + selectedMinuteWithExtraZero);
+                            }
+                        }
+
 
                     }
                 }, hour, minute, true);
@@ -345,6 +390,9 @@ public class ReservationActivity extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
+
+
+//                view.setMinDate(System.currentTimeMillis() - 1000);
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, day);
@@ -380,7 +428,7 @@ public class ReservationActivity extends AppCompatActivity {
 
     private void showConfirmBookingDialog(ParkingSlotBooking slotBooking) {
         FirebaseDatabase.getInstance().getReference("incrementValue").setValue(ServerValue.increment(1));
-        CustomDialog cdd = new CustomDialog(ReservationActivity.this, authUser, slotBooking,slotBooking.getStrBookingDate(),slotBooking.getTime(),slotBooking.getLicenseNumber(),slotBooking.getLiceseCharacter());
+        CustomDialog cdd = new CustomDialog(ReservationActivity.this, authUser, slotBooking, slotBooking.getStrBookingDate(), slotBooking.getTime(), slotBooking.getLicenseNumber(), slotBooking.getLiceseCharacter());
         cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
         cdd.show();

@@ -61,7 +61,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="250dp"
                 android:fontFamily="@font/adamina"
-                android:text="You Are Successfully Booked Your Parking Slot"
+                android:text="You Successfully Booked Your Parking Slot"
                 android:textColor="@color/black"
                 android:textSize="12dp" />
 

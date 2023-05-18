@@ -8,8 +8,17 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class DeleteReservationDialog extends Dialog implements
         View.OnClickListener {
@@ -18,12 +27,15 @@ public class DeleteReservationDialog extends Dialog implements
     public Dialog d;
     public Button confirm, cancel;
     DatabaseReference userReservationReference;
+    Query userBookingQueryDelete;
+    CollectionReference collectionReference;
 
-    public DeleteReservationDialog(Activity a, DatabaseReference userReservationReference) {
+    public DeleteReservationDialog(Activity a, DatabaseReference userReservationReference,Query userBookingQueryDelete,CollectionReference collectionReference) {
         super(a);
         this.c = a;
         this.userReservationReference = userReservationReference;
-
+        this.userBookingQueryDelete = userBookingQueryDelete;
+        this.collectionReference = collectionReference;
     }
 
     @Override
@@ -60,7 +72,28 @@ public class DeleteReservationDialog extends Dialog implements
 
 
     public void deleteReservation() {
-        userReservationReference.removeValue();
+
+
+
+        userBookingQueryDelete.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        collectionReference.document(document.getId()).delete();
+                    }
+                } else {
+
+                }
+            }
+        });
+
+        if (userReservationReference != null) {
+            userReservationReference.removeValue();
+        }
+
+
+
     }
 
 
