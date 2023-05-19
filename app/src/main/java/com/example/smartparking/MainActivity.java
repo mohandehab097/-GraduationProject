@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.smartparking.models.ParkingSlotBooking;
 import com.example.smartparking.models.PaymentNotification;
+import com.example.smartparking.models.TimeNotification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         handler = new Handler(Looper.getMainLooper());
         handler2 = new Handler(Looper.getMainLooper());
 
@@ -102,7 +104,11 @@ public class MainActivity extends AppCompatActivity {
             rootRefernce = FirebaseDatabase.getInstance().getReference();
             slotRefernce = rootRef.child("UsersSlotBooking");
         }
+        TimeNotification time=new TimeNotification();
+        time.setNearTimeNotification(false);
+        time.setLimitTimeNotification(false);
 
+        rootRefernce.child("TimeNotification").setValue(time);
 
         if (slotRefernce != null && uid != null) {
             slotRefernce.child(uid).addValueEventListener(new ValueEventListener() {
@@ -122,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
                                 String maxDate = slotBooking.getStrBookingDate() + " " + slotBooking.getLimittime();
                                 String bookingDateTime = slotBooking.getStrBookingDate() + " " + slotBooking.getTime();
                                 boolean arrived = slotBooking.isArrived();
-                                checkDateBeforeBookingWithFewMinutes(bookingDateTime);
+//                                checkDateBeforeBookingWithFewMinutes(bookingDateTime);
 
-                                checkDateNow(maxDate, arrived);
+//                                checkDateNow(maxDate, arrived);
 
                             }
                         }
@@ -308,76 +314,76 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void checkDateNow(String maxDate, boolean isArrived) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+//    private void checkDateNow(String maxDate, boolean isArrived) {
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//
+//
+//                date = Calendar.getInstance().getTime();
+//
+//                dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//
+//                today = dateFormat.format(date);
+//                if (maxDate.equals(today) && !isArrived&&!checkLimitTime) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        checkLimitTime=true;
+//                        NotificationChannel notificationChannel = new NotificationChannel("limitNotifiy", "limitNotifiy", NotificationManager.IMPORTANCE_DEFAULT);
+//                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//                        notificationChannel.setShowBadge(true);
+//                        notificationChannel.enableLights(true);
+//                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+//                        notificationManager.createNotificationChannel(notificationChannel);
+//                    }
+//                    addLimitTimeNotification();
+//                    deleteUserBooking();
+//                    handler.removeCallbacks(this);
+//                }
+//                handler.postDelayed(this, 10 * 1000);
+//            }
+//        };
+//
+//        runnable.run();
+//    }
 
-
-                date = Calendar.getInstance().getTime();
-
-                dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-
-                today = dateFormat.format(date);
-                if (maxDate.equals(today) && !isArrived&&!checkLimitTime) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        checkLimitTime=true;
-                        NotificationChannel notificationChannel = new NotificationChannel("limitNotifiy", "limitNotifiy", NotificationManager.IMPORTANCE_DEFAULT);
-                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-                        notificationChannel.setShowBadge(true);
-                        notificationChannel.enableLights(true);
-                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-                        notificationManager.createNotificationChannel(notificationChannel);
-                    }
-                    addLimitTimeNotification();
-                    deleteUserBooking();
-                    handler.removeCallbacks(this);
-                }
-                handler.postDelayed(this, 10 * 1000);
-            }
-        };
-
-        runnable.run();
-    }
-
-    private void checkDateBeforeBookingWithFewMinutes(String bookingDateTime) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-
-                date2 = Calendar.getInstance().getTime();
-
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-
-                String today = dateFormat.format(date2);
-
-                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.ENGLISH);
-
-
-                LocalDateTime ldt = LocalDateTime.parse(bookingDateTime, dateFormatter);
-                ldt = ldt.minusMinutes(30);
-
-
-                if (today.equals(ldt.format(dateFormatter))&&!checkNearTime) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        checkNearTime=true;
-                        NotificationChannel notificationChannel = new NotificationChannel("soon", "soon", NotificationManager.IMPORTANCE_DEFAULT);
-                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-                        notificationChannel.setShowBadge(true);
-                        notificationChannel.enableLights(true);
-                        notificationChannel.enableVibration(true);
-                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-                        notificationManager.createNotificationChannel(notificationChannel);
-                    }
-                    sendNotificationWhenBookingTimeNear();
-                    handler2.removeCallbacks(this);
-                }
-                handler2.postDelayed(this, 10 * 1000);
-            }
-        };
-
-        runnable.run();
-    }
+//    private void checkDateBeforeBookingWithFewMinutes(String bookingDateTime) {
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                date2 = Calendar.getInstance().getTime();
+//
+//                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//
+//                String today = dateFormat.format(date2);
+//
+//                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.ENGLISH);
+//
+//
+//                LocalDateTime ldt = LocalDateTime.parse(bookingDateTime, dateFormatter);
+//                ldt = ldt.minusMinutes(30);
+//
+//
+//                if (today.equals(ldt.format(dateFormatter))&&!checkNearTime) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        checkNearTime=true;
+//                        NotificationChannel notificationChannel = new NotificationChannel("soon", "soon", NotificationManager.IMPORTANCE_DEFAULT);
+//                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//                        notificationChannel.setShowBadge(true);
+//                        notificationChannel.enableLights(true);
+//                        notificationChannel.enableVibration(true);
+//                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+//                        notificationManager.createNotificationChannel(notificationChannel);
+//                    }
+//                    sendNotificationWhenBookingTimeNear();
+//                    handler2.removeCallbacks(this);
+//                }
+//                handler2.postDelayed(this, 10 * 1000);
+//            }
+//        };
+//
+//        runnable.run();
+//    }
 
     private void deleteUserBooking() {
         if (slotRefernce != null && uid != null) {
