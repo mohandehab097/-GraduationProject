@@ -313,7 +313,7 @@ public class HomeActivity extends AppCompatActivity {
         String today = dateFormat.format(date2);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "slotNotify");
         builder.setContentTitle("RAKNII");
-        builder.setContentText("There Is an Empty slot,Book Today"+""+today);
+        builder.setContentText("There Is an Empty slot,Book Today");
         final long[] DEFAULT_VIBRATE_PATTERN = {0, 250, 250, 250};
         builder.setSmallIcon(R.mipmap.icon);
         builder.setAutoCancel(true);
