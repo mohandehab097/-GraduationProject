@@ -15,21 +15,21 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="223dp"
+            android:layout_height="203dp"
             android:background="@drawable/backg">
 
             <ImageView
                 android:layout_width="77dp"
                 android:layout_height="77dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="73dp"
+                android:layout_marginTop="63dp"
                 android:src="@drawable/car" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="110dp"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="130dp"
                 android:fontFamily="sans-serif-condensed-light"
                 android:letterSpacing="0.5"
                 android:text="RAKNII"
@@ -42,9 +42,47 @@
 
 
 
+
         <RelativeLayout
             android:layout_width="450dp"
-            android:layout_height="80dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="10dp"
+            >
+
+
+            <TextView
+
+                android:id="@+id/goToGoogleMaps"
+                android:layout_width="270dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="52dp"
+                android:layout_marginTop="18.7dp"
+                android:layout_marginRight="62dp"
+                android:background="@drawable/button_corners"
+                android:fontFamily="@font/adamina"
+                android:gravity="center"
+                android:padding="20dp"
+                android:textSize="11dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Parking Location"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/maps_icon"
+                android:layout_width="24.7dp"
+                android:layout_height="20.3dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/location" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="450dp"
+            android:layout_height="75dp"
             android:layout_marginTop="10dp"
             >
 
@@ -66,6 +104,7 @@
                 android:paddingBottom="14dp"
                 android:text="Book your Parking Slot"
                 android:textColor="#000000"
+                android:textSize="11dp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -73,7 +112,7 @@
                 android:layout_width="24.7dp"
                 android:layout_height="20.3dp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/booking" />
         </RelativeLayout>
 
@@ -81,7 +120,7 @@
 
         <RelativeLayout
             android:layout_width="450dp"
-            android:layout_height="80dp"
+            android:layout_height="75dp"
             android:layout_marginTop="10dp"
             >
 
@@ -99,6 +138,7 @@
                 android:gravity="center"
                 android:padding="20dp"
                 android:paddingTop="14dp"
+                android:textSize="11dp"
                 android:paddingBottom="14dp"
                 android:text="Your Reservations"
                 android:textColor="#000000"
@@ -109,7 +149,7 @@
                 android:layout_width="24.7dp"
                 android:layout_height="20.3dp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="38dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/booking" />
         </RelativeLayout>
 
@@ -117,7 +157,7 @@
 
         <RelativeLayout
             android:layout_width="450dp"
-            android:layout_height="80dp"
+            android:layout_height="75dp"
             android:layout_marginTop="10dp"
             >
 
@@ -136,6 +176,7 @@
                 android:padding="20dp"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
+                android:textSize="11dp"
                 android:text="Your Profile "
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -145,7 +186,7 @@
                 android:layout_width="24.7dp"
                 android:layout_height="20.3dp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="38dp"
+                android:layout_marginTop="39dp"
                 android:src="@drawable/prodile" />
         </RelativeLayout>
 
@@ -155,7 +196,7 @@
 
         <RelativeLayout
             android:layout_width="450dp"
-            android:layout_height="80dp"
+            android:layout_height="75dp"
             android:layout_marginTop="10dp"
 
             >
@@ -174,6 +215,7 @@
                 android:gravity="center"
                 android:padding="20dp"
                 android:paddingTop="14dp"
+                android:textSize="11dp"
                 android:paddingBottom="14dp"
                 android:text="About Us "
                 android:textColor="#000000"
@@ -184,13 +226,13 @@
                 android:layout_width="24.7dp"
                 android:layout_height="20.3dp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/info" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="450dp"
-            android:layout_height="150dp"
+            android:layout_height="55dp"
             android:layout_marginTop="20dp"
             >
 
@@ -210,6 +252,7 @@
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
                 android:text="Log Out "
+                android:textSize="11dp"
                 android:textColor="#000000"
                 android:textStyle="bold" />
     <ImageView
@@ -217,7 +260,7 @@
         android:layout_width="24.7dp"
         android:layout_height="20.3dp"
         android:layout_marginLeft="130dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="21dp"
         android:src="@drawable/logout" />
 </RelativeLayout>
 

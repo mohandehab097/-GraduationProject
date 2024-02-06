@@ -4,7 +4,7 @@ public class TimeNotification {
 
     private boolean limitTimeNotification;
     private boolean nearTimeNotification;
-
+    private boolean emptySlot;
     public TimeNotification() {
 
     }
@@ -23,5 +23,13 @@ public class TimeNotification {
 
     public void setNearTimeNotification(boolean nearTimeNotification) {
         this.nearTimeNotification = nearTimeNotification;
+    }
+
+    public boolean isEmptySlot() {
+        return emptySlot;
+    }
+
+    public void setEmptySlot(boolean emptySlot) {
+        this.emptySlot = emptySlot;
     }
 }

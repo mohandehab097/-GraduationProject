@@ -103,7 +103,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="@font/adamina"
-                        android:text="2h 30m"
+                        android:text=""
                         android:textColor="@android:color/black"
                         android:textSize="12dp"
                         android:textStyle="bold" />
@@ -149,7 +149,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="@font/adamina"
-                        android:text="40$"
+                        android:text=""
                         android:textColor="@android:color/black"
                         android:textSize="12dp"
                         android:textStyle="bold" />
@@ -167,20 +167,10 @@
                 android:orientation="horizontal" >
 
 
-                <Button
-                    android:id="@+id/cashBtn"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/button_corners"
-                    android:clickable="true"
-                    android:fontFamily="@font/adamina"
-                    android:text="Cash"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/visaBtn"
-                    android:layout_width="100dp"
+                    android:layout_width="160dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/button_corners"

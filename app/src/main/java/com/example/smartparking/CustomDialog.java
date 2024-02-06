@@ -21,13 +21,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CustomDialog extends Dialog implements
@@ -43,8 +51,11 @@ public class CustomDialog extends Dialog implements
     Integer incrementValue = 0;
     Incrementer incrementer;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseDatabase databasee = FirebaseDatabase.getInstance();
+    DatabaseReference slotReff = databasee.getReference("ParkingSlots");
 
 
+    boolean checkReserved = false;
 
 
     public CustomDialog(Activity a, FirebaseUser authUser, ParkingSlotBooking slotBooking, String userBookingDate, String userBookingTime, String userCarNumber, String userCarCharacter) {
@@ -101,9 +112,52 @@ public class CustomDialog extends Dialog implements
             case R.id.btn_confrim:
 
 
+                slotReff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String date = bookingDate.getText().toString();
+                        Date now = Calendar.getInstance().getTime();
+                        DateFormat dateFormater = new SimpleDateFormat("dd/MM/yyyy");
+                        String todayy = dateFormater.format(now);
+                        Date bookingDatee = null;
+                        try {
+                            bookingDatee = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        String parkingSlotKey;
+                        String parkingSlotsValue;
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            parkingSlotKey = ds.getKey();
+                            parkingSlotsValue = ds.getValue(String.class);
+                            if (checkReserved){
+                                break;
+                            }
+
+                            else{
+                                if (parkingSlotsValue.equals("on")) {
+                                    if (date.equals(todayy)) {
+                                        slotReff.child(parkingSlotKey).setValue("reserved");
+                                        checkReserved = true;
+                                    }
+                                    break;
+                                }
+                            }
 
 
 
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
                 db.collection("UserBooking").document(authUser.getUid()).collection("userReservationDocument").document().set(slotBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -112,9 +166,6 @@ public class CustomDialog extends Dialog implements
 
                     }
                 });
-
-
-
 
 
                 FirebaseDatabase.getInstance().getReference("reservationLicense").child(incrementer.getIncrementValue().toString()).setValue(slotBooking.getLicenseNumbersAndCharacter()).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -91,6 +92,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                                 emailValidation.startAnimation(translatebu);
                                 errorIconEmail.startAnimation(translatebu);
+
                             }
 
                             else if (task.isSuccessful()){
@@ -101,6 +103,18 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                                 successMessage.startAnimation(translatebu);
                                 successIcon.startAnimation(translatebu);
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent start = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                                        startActivity(start);
+                                        overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
+
+                                        finish();
+                                    }
+                                }, 4000);
+
                             }
 
                             else{

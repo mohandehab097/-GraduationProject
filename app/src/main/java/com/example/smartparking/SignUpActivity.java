@@ -22,7 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.smartparking.models.Incrementer;
 import com.example.smartparking.models.User;
+import com.example.smartparking.models.UserIncrementer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +36,11 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextView emailValidation, passwordValidation, confirmPasswordValidation, phoneValidation, usernameValidation, emailExistsValidation;
 
     String strEmail, strPassword;
-
+    UserIncrementer incrementer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +84,8 @@ public class SignUpActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phone_input);
         progressBar = findViewById(R.id.progressBar);
         toLoginBtn = findViewById(R.id.toLoginBtn);
+
+
 
 
         toLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -312,6 +320,8 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+
+
 
 
 //                            updateUI(user);

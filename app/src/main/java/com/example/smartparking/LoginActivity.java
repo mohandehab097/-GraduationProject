@@ -193,7 +193,7 @@ toSignUpPage.setOnClickListener(new View.OnClickListener() {
 
                                 validationCredentials.setVisibility(View.VISIBLE);
                                 errorIconCredentials.setVisibility(View.VISIBLE);
-                                validationCredentials.setText("Check Your Credentials !");
+                                validationCredentials.setText("Wrong Password !");
                                 Animation translatebu= AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_down_in);
                                 validationCredentials.startAnimation(translatebu);
                                 errorIconCredentials.startAnimation(translatebu);

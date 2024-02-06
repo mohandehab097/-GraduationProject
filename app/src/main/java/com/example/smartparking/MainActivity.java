@@ -77,13 +77,6 @@ public class MainActivity extends AppCompatActivity {
     String sendNotification = null;
     DatabaseReference notifyRef;
     String userLicenseNumber = null;
-    Date date;
-    Date date2;
-    DateFormat dateFormat;
-    String today;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    boolean checkLimitTime=false;
-    boolean checkNearTime=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +96,19 @@ public class MainActivity extends AppCompatActivity {
             notifyRef = rootRef.child("PaymentNotification");
             rootRefernce = FirebaseDatabase.getInstance().getReference();
             slotRefernce = rootRef.child("UsersSlotBooking");
-        }
-        TimeNotification time=new TimeNotification();
-        time.setNearTimeNotification(false);
-        time.setLimitTimeNotification(false);
+            TimeNotification time=new TimeNotification();
+            time.setNearTimeNotification(false);
+            time.setEmptySlot(false);
+            time.setLimitTimeNotification(false);
+            rootRefernce.child("TimeNotification").child(uid).setValue(time);
 
-        rootRefernce.child("TimeNotification").setValue(time);
+
+
+        }
+
+
+
+
 
         if (slotRefernce != null && uid != null) {
             slotRefernce.child(uid).addValueEventListener(new ValueEventListener() {
@@ -125,12 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 checkNotification();
 
-                                String maxDate = slotBooking.getStrBookingDate() + " " + slotBooking.getLimittime();
-                                String bookingDateTime = slotBooking.getStrBookingDate() + " " + slotBooking.getTime();
-                                boolean arrived = slotBooking.isArrived();
-//                                checkDateBeforeBookingWithFewMinutes(bookingDateTime);
-
-//                                checkDateNow(maxDate, arrived);
 
                             }
                         }
@@ -267,147 +261,10 @@ public class MainActivity extends AppCompatActivity {
         notificationManagerCompat.notify(1, builder.build());
     }
 
-    private void addLimitTimeNotification() {
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "limitNotifiy");
-        builder.setContentTitle("RAKNII");
-        builder.setContentText("Sorry! You Are late,Your Reservation Is Cancelled");
-        final long[] DEFAULT_VIBRATE_PATTERN = {0, 250, 250, 250};
-        builder.setSmallIcon(R.mipmap.icon);
-        builder.setAutoCancel(true);
-        builder.setOnlyAlertOnce(true);
-        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        builder.setVibrate(DEFAULT_VIBRATE_PATTERN);
-        builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        builder.setContentIntent(pendingIntent);
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
-        notificationManagerCompat.notify(1, builder.build());
-
-    }
-
-    private void sendNotificationWhenBookingTimeNear() {
 
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "soon");
-        builder.setContentTitle("RAKNII");
-        builder.setContentText("Your Time for Your parking Slot Is Very Close");
-        final long[] DEFAULT_VIBRATE_PATTERN = {0, 250, 250, 250};
-        builder.setSmallIcon(R.mipmap.icon);
-        builder.setAutoCancel(true);
-        builder.setOnlyAlertOnce(true);
-        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        builder.setVibrate(DEFAULT_VIBRATE_PATTERN);
-        builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
-        Intent intent = new Intent(this, CounterBookingActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        builder.setContentIntent(pendingIntent);
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
-        notificationManagerCompat.notify(1, builder.build());
 
-    }
-
-//    private void checkDateNow(String maxDate, boolean isArrived) {
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//
-//                date = Calendar.getInstance().getTime();
-//
-//                dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//
-//                today = dateFormat.format(date);
-//                if (maxDate.equals(today) && !isArrived&&!checkLimitTime) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        checkLimitTime=true;
-//                        NotificationChannel notificationChannel = new NotificationChannel("limitNotifiy", "limitNotifiy", NotificationManager.IMPORTANCE_DEFAULT);
-//                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//                        notificationChannel.setShowBadge(true);
-//                        notificationChannel.enableLights(true);
-//                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-//                        notificationManager.createNotificationChannel(notificationChannel);
-//                    }
-//                    addLimitTimeNotification();
-//                    deleteUserBooking();
-//                    handler.removeCallbacks(this);
-//                }
-//                handler.postDelayed(this, 10 * 1000);
-//            }
-//        };
-//
-//        runnable.run();
-//    }
-
-//    private void checkDateBeforeBookingWithFewMinutes(String bookingDateTime) {
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                date2 = Calendar.getInstance().getTime();
-//
-//                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//
-//                String today = dateFormat.format(date2);
-//
-//                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.ENGLISH);
-//
-//
-//                LocalDateTime ldt = LocalDateTime.parse(bookingDateTime, dateFormatter);
-//                ldt = ldt.minusMinutes(30);
-//
-//
-//                if (today.equals(ldt.format(dateFormatter))&&!checkNearTime) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        checkNearTime=true;
-//                        NotificationChannel notificationChannel = new NotificationChannel("soon", "soon", NotificationManager.IMPORTANCE_DEFAULT);
-//                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//                        notificationChannel.setShowBadge(true);
-//                        notificationChannel.enableLights(true);
-//                        notificationChannel.enableVibration(true);
-//                        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-//                        notificationManager.createNotificationChannel(notificationChannel);
-//                    }
-//                    sendNotificationWhenBookingTimeNear();
-//                    handler2.removeCallbacks(this);
-//                }
-//                handler2.postDelayed(this, 10 * 1000);
-//            }
-//        };
-//
-//        runnable.run();
-//    }
-
-    private void deleteUserBooking() {
-        if (slotRefernce != null && uid != null) {
-            slotRefernce.child(uid).removeValue();
-
-        }
-
-        FirebaseFirestore.getInstance()
-                .collection("UserBooking").document(FirebaseAuth.getInstance()
-                        .getCurrentUser().getUid()).collection("userReservationDocument")
-                .whereEqualTo("reservationEnds", false)
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        WriteBatch writeBatch = FirebaseFirestore.getInstance().batch();
-                        List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot snapshot : snapshotList) {
-                            writeBatch.delete(snapshot.getReference());
-
-                        }
-                        writeBatch.commit();
-                    }
-                });
-
-    }
 
 }

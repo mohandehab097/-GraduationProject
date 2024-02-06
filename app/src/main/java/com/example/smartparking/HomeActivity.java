@@ -2,15 +2,22 @@ package com.example.smartparking;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,9 +25,16 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.smartparking.models.ParkingSlotBooking;
 import com.example.smartparking.models.PaymentNotification;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,11 +59,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+
 public class HomeActivity extends AppCompatActivity {
 
 
     TextView reservationDatBtn;
-    TextView logout, reservationBtn, profileBtn;
+    TextView logout, reservationBtn, profileBtn, mapBtn, aboutUsBtn;
     DatabaseReference paymentNotification;
     DatabaseReference rootRef;
     DatabaseReference slotRefernce;
@@ -60,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
     DatabaseReference slotRef;
     List<String> slotsAvailability;
     String userLicenseNumber = null;
-    String date="";
+    String date = "";
     String uid;
     Date dateForMax;
     String today;
@@ -70,20 +92,26 @@ public class HomeActivity extends AppCompatActivity {
     Handler handler;
     Boolean checkNearTime;
     Boolean checkLimitTime;
+    Boolean checkEmptySlot;
+    private LocationRequest locationRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         reservationBtn = findViewById(R.id.goToReservation);
         reservationDatBtn = findViewById(R.id.reservationData);
+        aboutUsBtn = findViewById(R.id.AboutUs);
         handler2 = new Handler(Looper.getMainLooper());
         handler = new Handler(Looper.getMainLooper());
-
+        mapBtn = findViewById(R.id.goToGoogleMaps);
         logout = findViewById(R.id.logoutBtn);
         profileBtn = findViewById(R.id.goToProfile);
         slotsAvailability = new ArrayList<>();
-
-
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
 
         if (authUser != null) {
             uid = authUser.getUid();
@@ -93,20 +121,56 @@ public class HomeActivity extends AppCompatActivity {
             slotRefernce = rootRef.child("UsersSlotBooking");
         }
 
-        rootRef.child("TimeNotification").child("limitTimeNotification")
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                checkLimitTime = (Boolean) snapshot.getValue();
-                            }
+        aboutUsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToAboutUsActivity();
+            }
+        });
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+        checkMapPermission();
 
-                            }
-                        });
 
-        rootRef.child("TimeNotification").child("nearTimeNotification")
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                goToGoogleMaps();
+
+
+            }
+        });
+
+
+
+        rootRef.child("TimeNotification").child(uid).child("emptySlot")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        checkEmptySlot = (Boolean) snapshot.getValue();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+        rootRef.child("TimeNotification").child(uid).child("limitTimeNotification")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        checkLimitTime = (Boolean) snapshot.getValue();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+        rootRef.child("TimeNotification").child(uid).child("nearTimeNotification")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -119,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
 
+        slotNotification();
 
 
         reservationDatBtn.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +215,104 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void goToGoogleMaps() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+
+                if (isGPSEnabled()) {
+
+                    LocationServices.getFusedLocationProviderClient(HomeActivity.this)
+                            .requestLocationUpdates(locationRequest, new LocationCallback() {
+                                @Override
+                                public void onLocationResult(@NonNull LocationResult locationResult) {
+                                    super.onLocationResult(locationResult);
+
+                                    LocationServices.getFusedLocationProviderClient(HomeActivity.this)
+                                            .removeLocationUpdates(this);
+
+                                    if (locationResult != null && locationResult.getLocations().size() > 0) {
+
+                                        int index = locationResult.getLocations().size() - 1;
+                                        double latitude = locationResult.getLocations().get(index).getLatitude();
+                                        double longitude = locationResult.getLocations().get(index).getLongitude();
+
+                                        Uri uri = Uri.parse("http://maps.google.com/maps?saddr=" + latitude + "," + longitude + "&daddr=31.21454,29.94568");
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                        intent.setPackage("com.google.android.apps.maps");
+
+                                        startActivity(intent);
+
+                                    }
+                                }
+                            }, Looper.getMainLooper());
+
+                } else {
+                    turnOnGPS();
+                }
+
+
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
+
+    private void turnOnGPS() {
+
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext())
+                .checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Toast.makeText(HomeActivity.this, "", Toast.LENGTH_SHORT).show();
+
+                } catch (ApiException e) {
+
+                    switch (e.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                            try {
+                                ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                                resolvableApiException.startResolutionForResult(HomeActivity.this, 2);
+                            } catch (IntentSender.SendIntentException ex) {
+                                ex.printStackTrace();
+                            }
+                            break;
+
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            //Device does not have location
+                            break;
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+
+    }
+
     public void slotNotification() {
         slotRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -171,11 +334,13 @@ public class HomeActivity extends AppCompatActivity {
                 Date date2 = Calendar.getInstance().getTime();
 
                 String today = dateFormat.format(date2);
-                if ((date != null && !date.equals(today))) {
 
-                    if (!slotsAvailability.isEmpty() && slotsAvailability.size() == 1) {
+
+                if(checkEmptySlot!=null){
+                    if (!slotsAvailability.isEmpty() && slotsAvailability.size() == 1&&!checkEmptySlot) {
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            rootRef.child("TimeNotification").child(uid).child("emptySlot").setValue(true);
                             NotificationChannel notificationChannel = new NotificationChannel("slotNotify", "slotNotify", NotificationManager.IMPORTANCE_DEFAULT);
                             NotificationManager notificationManager = getSystemService(NotificationManager.class);
                             notificationChannel.setShowBadge(true);
@@ -186,6 +351,9 @@ public class HomeActivity extends AppCompatActivity {
 
                     }
                 }
+
+
+
 
 
                 slotsAvailability.clear();
@@ -340,6 +508,14 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void goToAboutUsActivity() {
+
+        startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+
+    }
+
 
 //    private void goToReservation(){
 //
@@ -349,14 +525,14 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = getIntent();
-        String str = intent.getStringExtra("noSlots");
-        if (str != null && !str.isEmpty() && str.equals("ShowErrorDialog")) {
-            ErrorDialog cdd = new ErrorDialog(HomeActivity.this);
-            cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
-            cdd.show();
-        }
+//        Intent intent = getIntent();
+//        String str = intent.getStringExtra("noSlots");
+//        if (str != null && !str.isEmpty() && str.equals("ShowErrorDialog")) {
+//            ErrorDialog cdd = new ErrorDialog(HomeActivity.this);
+//            cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//            cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+//            cdd.show();
+//        }
 
     }
 
@@ -382,7 +558,7 @@ public class HomeActivity extends AppCompatActivity {
                                 String maxDate = slotBooking.getStrBookingDate() + " " + slotBooking.getLimittime();
                                 String bookingDateTime = slotBooking.getStrBookingDate() + " " + slotBooking.getTime();
                                 boolean arrived = slotBooking.isArrived();
-                                slotNotification();
+
                                 checkDateBeforeBookingWithFewMinutes(bookingDateTime);
                                 checkDateNow(maxDate, arrived);
 
@@ -405,8 +581,6 @@ public class HomeActivity extends AppCompatActivity {
     private void checkDateBeforeBookingWithFewMinutes(String bookingDateTime) {
 
 
-
-
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -424,10 +598,9 @@ public class HomeActivity extends AppCompatActivity {
                 ldt = ldt.minusMinutes(30);
 
 
-
                 if (today.equals(ldt.format(dateFormatter)) && !checkNearTime) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        rootRef.child("TimeNotification").child("nearTimeNotification").setValue(true);
+                        rootRef.child("TimeNotification").child(uid).child("nearTimeNotification").setValue(true);
                         NotificationChannel notificationChannel = new NotificationChannel("soon", "soon", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationChannel.setShowBadge(true);
@@ -458,9 +631,9 @@ public class HomeActivity extends AppCompatActivity {
                 dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
                 today = dateFormat.format(dateForMax);
-                if (maxDate.equals(today) && !isArrived&&!checkLimitTime) {
+                if (maxDate.equals(today) && !isArrived && !checkLimitTime) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        rootRef.child("TimeNotification").child("limitTimeNotification").setValue(true);
+                        rootRef.child("TimeNotification").child(uid).child("limitTimeNotification").setValue(true);
                         NotificationChannel notificationChannel = new NotificationChannel("limitNotifiy", "limitNotifiy", NotificationManager.IMPORTANCE_DEFAULT);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationChannel.setShowBadge(true);
@@ -551,6 +724,20 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void checkMapPermission() {
+        if (ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            if (!isGPSEnabled()) {
+                turnOnGPS();
+
+            }
+
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        }
     }
 
 }

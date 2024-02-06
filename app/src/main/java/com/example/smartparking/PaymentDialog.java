@@ -31,7 +31,7 @@ public class PaymentDialog extends Dialog implements View.OnClickListener {
 
     public Activity c;
 
-    public Button confirm, cancel;
+    public Button pay, cancel;
     DatabaseReference userReservationReference;
     Query userBookingQueryDelete;
     CollectionReference collectionReference;
@@ -76,7 +76,7 @@ public class PaymentDialog extends Dialog implements View.OnClickListener {
 
                             if(payment!=null){
                                 paymentDate.setText(payment.getDate().toString().trim());
-                                paymentMoney.setText(payment.getTheAmount().toString().trim());
+                                paymentMoney.setText(payment.getTheAmount().toString().trim()+ "EGP");
                                 payentStayedTime.setText(payment.getStayedHourTime()+"h"+" "+payment.getStayedMinutesTime()+"m");
 
                             }
@@ -104,6 +104,9 @@ public class PaymentDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
 
+
+
+
             case R.id.btn_cancel:
                 dismiss();
                 break;
@@ -113,6 +116,10 @@ public class PaymentDialog extends Dialog implements View.OnClickListener {
         }
 
     }
+
+
+
+
 
 
 }

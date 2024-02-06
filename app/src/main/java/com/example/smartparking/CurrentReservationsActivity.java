@@ -186,18 +186,7 @@ public class CurrentReservationsActivity extends AppCompatActivity {
     }
 
 
-//    private void showCancelReservationDialog() {
-//        if (slotRefernce != null && uid != null) {
-//        DeleteReservationDialog deleteReservationDialog = new DeleteReservationDialog(CurrentReservationsActivity.this, slotRefernce.child(uid),userBookingQueryDelete,collectionReference);
-//        deleteReservationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        deleteReservationDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-//        deleteReservationDialog.show();
-//        }
-//
-//        getUserBookingData();
-//
-//
-//    }
+
 
 
 

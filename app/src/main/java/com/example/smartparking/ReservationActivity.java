@@ -110,8 +110,6 @@ public class ReservationActivity extends AppCompatActivity {
                 fullParking = new ArrayList<>();
 
 
-                boolean validBooking = false;
-
                 for (String slots : slotsAvailability) {
 
                     if (slots.equals("on")) {
@@ -146,6 +144,47 @@ public class ReservationActivity extends AppCompatActivity {
                     errorTimeIcon.setVisibility(View.VISIBLE);
                     errorTimeMessage.setText("You Should Enter Booking Time");
                     errorTimeMessage.setVisibility(View.VISIBLE);
+                }
+
+
+
+                Calendar now = Calendar.getInstance();
+                int hour = now.get(Calendar.HOUR);
+                int minute = now.get(Calendar.MINUTE);
+
+                Calendar nowDate = Calendar.getInstance();
+                nowDate.set(Calendar.HOUR_OF_DAY, nowDate.getTime().getHours() );
+                nowDate.set(Calendar.MINUTE, nowDate.getTime().getMinutes() );
+                nowDate.set(Calendar.SECOND, 0);
+
+                String reference = bookingTime.getText().toString();
+                String[] parts = reference.split(":");
+
+
+                Calendar timeBooking = Calendar.getInstance();
+                timeBooking.set(Calendar.HOUR_OF_DAY, Integer.parseInt(parts[0]));
+                timeBooking.set(Calendar.MINUTE, Integer.parseInt(parts[1]));
+                timeBooking.set(Calendar.SECOND, 0);
+
+
+                if (timeBooking.before(nowDate)) {
+                    bookingBtn.setEnabled(false);
+                    bookingBtn.getBackground().setAlpha(148);
+                    errorOldDateMessage.setVisibility(View.VISIBLE);
+                    errorOldDateIcon.setVisibility(View.VISIBLE);
+                    errorTodayDateMessage.setVisibility(View.VISIBLE);
+
+                    errorTodayDateMessage.setText(" " + hour + ":" + minute+"");
+                }
+                else{
+                    bookingBtn.getBackground().setAlpha(250);
+                    errorOldDateMessage.setVisibility(View.GONE);
+                    errorOldDateIcon.setVisibility(View.GONE);
+                    errorTodayDateMessage.setVisibility(View.GONE);
+                    bookingBtn.setBackgroundResource(R.drawable.button_corners);
+
+                    bookingBtn.setEnabled(true);
+
                 }
 
                 if (!time.isEmpty()) {
@@ -226,15 +265,18 @@ public class ReservationActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+
                 String date = bookingDate.getText().toString();
-                Date bookingDate = null;
+                Date bookingDatee = null;
                 try {
-                    bookingDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+                    bookingDatee = new SimpleDateFormat("dd/MM/yyyy").parse(date);
                     Date now = Calendar.getInstance().getTime();
                     Calendar c1 = Calendar.getInstance();
                     Calendar c2 = Calendar.getInstance();
-
-                    c1.setTime(bookingDate);
+                   DateFormat dateFormater = new SimpleDateFormat("dd/MM/yyyy");
+                    String todayy = dateFormater.format(now);
+                    c1.setTime(bookingDatee);
                     c2.setTime(now);
                     int yearDiff = c1.get(Calendar.YEAR) - c2.get(Calendar.YEAR);
                     int monthDiff = c1.get(Calendar.MONTH) - c2.get(Calendar.MONTH);
@@ -250,11 +292,35 @@ public class ReservationActivity extends AppCompatActivity {
                         String today = dateFormat.format(now);
                         errorTodayDateMessage.setText(" " + today + "");
                     } else {
+
                         errorOldDateMessage.setVisibility(View.GONE);
                         errorOldDateIcon.setVisibility(View.GONE);
                         errorTodayDateMessage.setVisibility(View.GONE);
                         bookingBtn.setBackgroundResource(R.drawable.button_corners);
+                        bookingBtn.getBackground().setAlpha(250);
+
                         bookingBtn.setEnabled(true);
+
+                        if(bookingDate.getText().toString().equals(todayy)){
+                            if(fullParking.size() == 0){
+                                bookingBtn.getBackground().setAlpha(148);
+                                bookingBtn.setEnabled(false);
+                                ErrorDialog cdd = new ErrorDialog(ReservationActivity.this);
+                                cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                cdd.getWindow().getAttributes().windowAnimations = R.style.CustomDialogAnimation;
+                                cdd.show();
+                                fullParking.clear();
+                                slotsAvailability.clear();
+                            }
+                        }
+                        else{
+                            bookingBtn.getBackground().setAlpha(250);
+                            bookingBtn.setBackgroundResource(R.drawable.button_corners);
+                            bookingBtn.setEnabled(true);
+                        }
+
+
+
                     }
 
 
@@ -272,7 +338,7 @@ public class ReservationActivity extends AppCompatActivity {
                 if (!date.isEmpty()) {
                     errorDateMessage.setVisibility(View.GONE);
                     errorDateIcon.setVisibility(View.GONE);
-                    slotBooking.setBookingDate(bookingDate);
+                    slotBooking.setBookingDate(bookingDatee);
                     slotBooking.setStrBookingDate(date);
                 }
 
@@ -280,19 +346,8 @@ public class ReservationActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Date date = Calendar.getInstance().getTime();
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                String today = dateFormat.format(date);
-                if (fullParking.size() == 0 && bookingDate.getText().toString().equals(today)) {
-                    Intent intent = new Intent(ReservationActivity.this, HomeActivity.class);
-                    intent.putExtra("noSlots", "ShowErrorDialog");
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
-                    fullParking.clear();
-                    slotsAvailability.clear();
 
 
-                }
             }
         });
 

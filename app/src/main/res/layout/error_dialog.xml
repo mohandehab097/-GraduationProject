@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="140dp"
     android:padding="9dp"
-    android:background="@drawable/white_fill__rounded_color"
+    android:background="@drawable/changepasswordborder"
     android:orientation="vertical" >
 
     <ImageView
